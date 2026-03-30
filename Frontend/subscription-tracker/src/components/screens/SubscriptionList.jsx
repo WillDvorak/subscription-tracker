@@ -53,7 +53,7 @@ export default function SubscriptionList(props) {
                     </Card>
                 </Col>
 
-                <Col xs={12} md={7}
+                <Col xs={12} md={6}
                     style={{
                         backgroundColor: "transparent",
                         borderRadius: 10,
@@ -65,15 +65,7 @@ export default function SubscriptionList(props) {
                     {subscriptions && subscriptions.map((sub) => (
                         <SubscriptionItemBar
                             key={sub.id}
-                            priority={sub.priority}
-                            title={sub.title}
-                            price={sub.price}
-                            renewCycle={sub.renewCycle}
-                            renewDate={sub.renewDate}
-                            category={sub.category}
-                            color={sub.color}
-                            textColor={sub.textColor}
-                            imgUrl={sub.imgUrl}
+                            subInfo={sub}
                             setSubs={setSubscriptions}
                             setSelected={setSelectedSubscription}
                             setIsEditing={setIsEditing}
