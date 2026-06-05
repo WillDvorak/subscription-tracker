@@ -24,6 +24,7 @@ public class SubscriptionDTO {
         private String renewCycle;
         private LocalDate renewDate;
         private String priority;
+        private Boolean active;
         private String category;
         private String color;
         private String textColor;
@@ -43,6 +44,7 @@ public class SubscriptionDTO {
         private LocalDate renewDate;
         private LocalDate nextRenewalDate;
         private String priority;
+        private boolean active;
         private String category;
         private String color;
         private String textColor;

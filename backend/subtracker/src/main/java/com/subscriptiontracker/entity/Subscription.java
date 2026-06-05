@@ -42,6 +42,9 @@ public class Subscription {
     /** High, Medium, Low */
     private String priority;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     private String category;
 
     /** CSS color for the UI card */

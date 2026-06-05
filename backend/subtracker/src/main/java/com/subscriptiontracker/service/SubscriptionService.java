@@ -64,6 +64,7 @@ public class SubscriptionService {
         sub.setRenewCycle(req.getRenewCycle());
         sub.setRenewDate(req.getRenewDate());
         sub.setPriority(req.getPriority());
+        sub.setActive(req.getActive() != null ? req.getActive() : true);
         sub.setCategory(req.getCategory());
         sub.setColor(req.getColor());
         sub.setTextColor(req.getTextColor());
@@ -123,6 +124,7 @@ public class SubscriptionService {
         res.setRenewDate(sub.getRenewDate());
         res.setNextRenewalDate(calculateNextRenewal(sub.getRenewDate(), sub.getRenewCycle()));
         res.setPriority(sub.getPriority());
+        res.setActive(sub.isActive());
         res.setCategory(sub.getCategory());
         res.setColor(sub.getColor());
         res.setTextColor(sub.getTextColor());
