@@ -41,6 +41,7 @@ public class SubscriptionDTO {
         private BigDecimal price;
         private String renewCycle;
         private LocalDate renewDate;
+        private LocalDate nextRenewalDate;
         private String priority;
         private String category;
         private String color;

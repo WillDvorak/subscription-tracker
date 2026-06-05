@@ -1,11 +1,15 @@
 package com.subscriptiontracker.service;
 
+import java.time.LocalDate;
+
 import com.subscriptiontracker.dto.SubscriptionDTO;
 import com.subscriptiontracker.entity.Subscription;
 import com.subscriptiontracker.entity.User;
 import com.subscriptiontracker.repository.SubscriptionRepository;
 import com.subscriptiontracker.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -88,6 +92,28 @@ public class SubscriptionService {
         }
     }
 
+    private LocalDate calculateNextRenewal(LocalDate renewDate, String renewCycle) {
+        if (renewDate == null || renewCycle == null){
+            return null;
+        }
+
+        LocalDate next = renewDate;
+        LocalDate today = LocalDate.now();
+
+        while (!next.isAfter(today)){
+            switch(renewCycle) {
+                case "Weekly" -> next = next.plusWeeks(1);
+                case "Monthly" -> next = next.plusMonths(1);
+                case "Quarterly" -> next = next.plusMonths(3);
+                case "Biannually" -> next = next.plusMonths(6);
+                case "Yearly" -> next = next.plusYears(1);
+                default -> {return null;}
+            }
+        }
+
+        return next;
+    }
+
     private SubscriptionDTO.Response toResponse(Subscription sub) {
         SubscriptionDTO.Response res = new SubscriptionDTO.Response();
         res.setId(sub.getId());
@@ -95,6 +121,7 @@ public class SubscriptionService {
         res.setPrice(sub.getPrice());
         res.setRenewCycle(sub.getRenewCycle());
         res.setRenewDate(sub.getRenewDate());
+        res.setNextRenewalDate(calculateNextRenewal(sub.getRenewDate(), sub.getRenewCycle()));
         res.setPriority(sub.getPriority());
         res.setCategory(sub.getCategory());
         res.setColor(sub.getColor());
