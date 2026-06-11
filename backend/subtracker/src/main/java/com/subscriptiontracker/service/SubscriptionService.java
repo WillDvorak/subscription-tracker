@@ -115,6 +115,25 @@ public class SubscriptionService {
         return next;
     }
 
+    private LocalDate calculateLastRenewal(LocalDate nextRenewDate, String renewCycle) {
+        if (nextRenewDate == null || renewCycle == null){
+            return null;
+        }
+
+        LocalDate last = nextRenewDate;
+
+        switch(renewCycle) {
+                case "Weekly" -> last = last.minusWeeks(1);
+                case "Monthly" -> last = last.minusMonths(1);
+                case "Quarterly" -> last = last.minusMonths(3);
+                case "Biannually" -> last = last.minusMonths(6);
+                case "Yearly" -> last = last.minusYears(1);
+                default -> {return null;}
+            }
+        
+        return last;
+    }
+
     private SubscriptionDTO.Response toResponse(Subscription sub) {
         SubscriptionDTO.Response res = new SubscriptionDTO.Response();
         res.setId(sub.getId());
@@ -122,7 +141,9 @@ public class SubscriptionService {
         res.setPrice(sub.getPrice());
         res.setRenewCycle(sub.getRenewCycle());
         res.setRenewDate(sub.getRenewDate());
-        res.setNextRenewalDate(calculateNextRenewal(sub.getRenewDate(), sub.getRenewCycle()));
+        LocalDate nextRenewal = calculateNextRenewal(sub.getRenewDate(), sub.getRenewCycle());
+        res.setNextRenewalDate(nextRenewal);
+        res.setLastRenewalDate(calculateLastRenewal(nextRenewal, sub.getRenewCycle()));
         res.setPriority(sub.getPriority());
         res.setActive(sub.isActive());
         res.setCategory(sub.getCategory());

@@ -43,6 +43,7 @@ public class SubscriptionDTO {
         private String renewCycle;
         private LocalDate renewDate;
         private LocalDate nextRenewalDate;
+        private LocalDate lastRenewalDate;
         private String priority;
         private boolean active;
         private String category;
