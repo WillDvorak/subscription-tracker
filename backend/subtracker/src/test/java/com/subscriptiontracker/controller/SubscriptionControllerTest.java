@@ -78,8 +78,8 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void getSubscriptions_returns401_withoutToken() throws Exception {
+    void getSubscriptions_returns403_withoutToken() throws Exception {
         mockMvc.perform(get("/api/subscriptions"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isForbidden());
     }
 }
