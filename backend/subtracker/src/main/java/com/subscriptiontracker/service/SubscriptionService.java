@@ -23,12 +23,6 @@ public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
 
-    public List<SubscriptionDTO.Response> getAllSubscriptions() {
-        return subscriptionRepository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
-    }
-
     public List<SubscriptionDTO.Response> getSubscriptionsByUser(Long userId) {
         assertUserExists(userId);
         return subscriptionRepository.findByUserId(userId).stream()
@@ -36,24 +30,35 @@ public class SubscriptionService {
                 .toList();
     }
 
-    public SubscriptionDTO.Response getSubscriptionById(Long id) {
-        return toResponse(findOrThrow(id));
-    }
-
-    public SubscriptionDTO.Response createSubscription(SubscriptionDTO.Request req) {
+    public SubscriptionDTO.Response createSubscription(SubscriptionDTO.Request req, Long userId) {
         Subscription sub = new Subscription();
         applyRequest(req, sub);
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found with id: " + userId));
+        sub.setUser(user);
+
         return toResponse(subscriptionRepository.save(sub));
     }
 
-    public SubscriptionDTO.Response updateSubscription(Long id, SubscriptionDTO.Request req) {
+    public SubscriptionDTO.Response updateSubscription(Long id, SubscriptionDTO.Request req, Long userId) {
         Subscription sub = findOrThrow(id);
+        assertOwnership(sub, userId);
         applyRequest(req, sub);
         return toResponse(subscriptionRepository.save(sub));
     }
 
-    public void deleteSubscription(Long id) {
-        subscriptionRepository.delete(findOrThrow(id));
+    public void deleteSubscription(Long id, Long userId) {
+        Subscription sub = findOrThrow(id);
+        assertOwnership(sub, userId);
+        subscriptionRepository.delete(sub);
+    }
+
+    public SubscriptionDTO.Response getSubscriptionById(Long id, Long userId) {
+        Subscription sub = findOrThrow(id);
+        assertOwnership(sub, userId);
+        return toResponse(sub);
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────
@@ -69,15 +74,6 @@ public class SubscriptionService {
         sub.setColor(req.getColor());
         sub.setTextColor(req.getTextColor());
         sub.setImgUrl(req.getImgUrl());
-
-        if (req.getUserId() != null) {
-            User user = userRepository.findById(req.getUserId())
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND, "User not found with id: " + req.getUserId()));
-            sub.setUser(user);
-        } else {
-            sub.setUser(null);
-        }
     }
 
     private Subscription findOrThrow(Long id) {
@@ -90,6 +86,12 @@ public class SubscriptionService {
         if (!userRepository.existsById(userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "User not found with id: " + userId);
+        }
+    }
+
+    private void assertOwnership(Subscription sub, Long userId) {
+        if (sub.getUser() == null || !sub.getUser().getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Subscription not found with id: " + sub.getId());
         }
     }
 

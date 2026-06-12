@@ -29,9 +29,6 @@ public class SubscriptionDTO {
         private String color;
         private String textColor;
         private String imgUrl;
-
-        /** ID of the user this subscription belongs to */
-        private Long userId;
     }
 
     /** Response body returned to the client */

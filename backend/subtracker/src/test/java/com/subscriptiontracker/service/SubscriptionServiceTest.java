@@ -4,6 +4,7 @@ import com.subscriptiontracker.dto.SubscriptionDTO;
 import com.subscriptiontracker.entity.Subscription;
 import com.subscriptiontracker.repository.SubscriptionRepository;
 import com.subscriptiontracker.repository.UserRepository;
+import com.subscriptiontracker.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,10 @@ class SubscriptionServiceTest {
     @Test
     void nextRenewalDate_isInFuture_forPastRenewDate() {
         // Arrange 
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
         SubscriptionDTO.Request req = new SubscriptionDTO.Request();
         req.setTitle("Netflix");
         req.setPrice(BigDecimal.valueOf(15.99));
@@ -50,7 +55,7 @@ class SubscriptionServiceTest {
         when(subscriptionRepository.save(any())).thenReturn(saved);
 
         // Act
-        SubscriptionDTO.Response response = subscriptionService.createSubscription(req);
+        SubscriptionDTO.Response response = subscriptionService.createSubscription(req, 1L);
 
         // Assert
         assertThat(response.getNextRenewalDate()).isAfter(LocalDate.now());
@@ -59,6 +64,10 @@ class SubscriptionServiceTest {
     @Test
     void nextRenewalDate_isNull_whenRenewCycleIsNull() {
         // Arrange
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
         SubscriptionDTO.Request req = new SubscriptionDTO.Request();
         req.setTitle("Netflix");
         req.setPrice(BigDecimal.valueOf(15.99));
@@ -73,7 +82,7 @@ class SubscriptionServiceTest {
         when(subscriptionRepository.save(any())).thenReturn(saved);
 
         // Act
-        SubscriptionDTO.Response response = subscriptionService.createSubscription(req);
+        SubscriptionDTO.Response response = subscriptionService.createSubscription(req, 1L);
 
         // Assert
         assertThat(response.getNextRenewalDate()).isNull();
@@ -82,6 +91,10 @@ class SubscriptionServiceTest {
     @Test
     void createSubscription_defaultsToActive() {
         // Arrange
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
         SubscriptionDTO.Request req = new SubscriptionDTO.Request();
         req.setTitle("Netflix");
         req.setPrice(BigDecimal.valueOf(15.99));
@@ -97,7 +110,7 @@ class SubscriptionServiceTest {
         when(subscriptionRepository.save(any())).thenReturn(saved);
 
         // Act
-        SubscriptionDTO.Response response = subscriptionService.createSubscription(req);
+        SubscriptionDTO.Response response = subscriptionService.createSubscription(req, 1L);
 
         // Assert
         assertThat(response.isActive()).isTrue();
@@ -111,12 +124,11 @@ class SubscriptionServiceTest {
         req.setPrice(BigDecimal.valueOf(15.99));
         req.setRenewCycle("Monthly");
         req.setRenewDate(LocalDate.now().minusMonths(2));
-        req.setUserId(999L);
 
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         // Assert
-        assertThatThrownBy(() -> subscriptionService.createSubscription(req))
+        assertThatThrownBy(() -> subscriptionService.createSubscription(req, 999L))
             .isInstanceOf(ResponseStatusException.class);
     }
 }
