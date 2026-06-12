@@ -1,9 +1,11 @@
 package com.subscriptiontracker.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.subscriptiontracker.dto.AuthDTO;
 import com.subscriptiontracker.dto.SubscriptionDTO;
-import com.subscriptiontracker.dto.UserDTO;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,6 +32,25 @@ class SubscriptionControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private String token;
+
+    @BeforeEach
+    void registerAndLogin() throws Exception {
+        AuthDTO.RegisterRequest req = new AuthDTO.RegisterRequest();
+        req.setUsername("testuser");
+        req.setEmail("testuser-" + UUID.randomUUID() + "@example.com");
+        req.setPassword("password123");
+
+        String response = mockMvc.perform(post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+            .andExpect(status().isCreated())
+            .andReturn().getResponse().getContentAsString();
+
+        JsonNode json = objectMapper.readTree(response);
+        token = json.get("token").asText();
+    }
+
     @Test
     void createSubscription_returns201() throws Exception {
         // Arrange
@@ -40,6 +62,7 @@ class SubscriptionControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/subscriptions")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
             .andExpect(status().isCreated())
@@ -48,31 +71,15 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void getSubscription_returns404_forUnknownId() throws Exception{
-        mockMvc.perform(get("/api/subscriptions/9999"))
+    void getSubscription_returns404_forUnknownId() throws Exception {
+        mockMvc.perform(get("/api/subscriptions/9999")
+                .header("Authorization", "Bearer " + token))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    void createUser_returns409_forDuplicateEmail() throws Exception{
-    
-        UserDTO.Request req = new UserDTO.Request();
-        req.setEmail("example@email.com");
-        req.setUsername("example");
-
-        UserDTO.Request req_duplicate = new UserDTO.Request();
-        req_duplicate.setEmail("example@email.com");
-        req_duplicate.setUsername("duplicate");
-        
-        mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
-            .andExpect(status().isCreated());
-
-        mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req_duplicate)))
-            .andExpect(status().isConflict());
-        
+    void getSubscriptions_returns401_withoutToken() throws Exception {
+        mockMvc.perform(get("/api/subscriptions"))
+            .andExpect(status().isUnauthorized());
     }
 }
