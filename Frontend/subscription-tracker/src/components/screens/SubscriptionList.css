@@ -1,0 +1,141 @@
+.sub-list-header {
+    padding-bottom: 2rem;
+}
+
+.sub-list-eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.sub-list-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.sub-list-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+    color: var(--text-primary);
+}
+
+.sub-list-burn {
+    text-align: right;
+}
+
+.sub-list-burn-label {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.sub-list-burn-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: monospace;
+}
+
+.sub-list-desc {
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.sub-stats-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.sub-stat-card {
+    flex: 1;
+    min-width: 180px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.sub-stat-label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    margin-bottom: 0.6rem;
+}
+
+.sub-stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.sub-stat-value .accent {
+    color: var(--accent);
+}
+
+.sub-stat-value .warn {
+    color: var(--warning);
+}
+
+.sub-stat-suffix {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-left: 0.35rem;
+}
+
+.sub-list-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sub-list-actions h2 {
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.sub-add-btn {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.sub-add-btn:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+/* Bootstrap Modal overrides for dark theme */
+.modal-content {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-title {
+    color: var(--text-primary);
+}
+
+.modal-body .sub-form-card {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}

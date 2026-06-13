@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Card, Row, Col } from "react-bootstrap";
+import { HexColorPicker } from "react-colorful";
+import "./SubscriptionInputForm.css";
 
 
 export default function SubscriptionInputForm(props) {
@@ -11,14 +13,10 @@ export default function SubscriptionInputForm(props) {
         price: 0.00,
         category: "",
         priority: "Medium",
-        textColor: "#000000",
         color: "#ffffff"
     });
 
-    const [previewImage, setPreviewImage] = useState(null);
     const [priceInput, setPriceInput] = useState("");
-
-    console.log("Form Data:", formData);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,13 +50,11 @@ export default function SubscriptionInputForm(props) {
             ...prev,
             {
                 id: Date.now(),
-                imgUrl: previewImage,
                 title: formData.title,
                 renewCycle: formData.renewCycle,
                 renewDate: formData.renewDate,
                 price: parseFloat(priceInput).toFixed(2),
                 color: formData.color,
-                textColor: formData.textColor,
                 priority: formData.priority,
                 category: formData.category,
             },
@@ -71,15 +67,15 @@ export default function SubscriptionInputForm(props) {
             price: "",
             category: "",
             priority: 5,
-            textColor: "#000000",
             color: "#ffffff",
         });
-        setPreviewImage(null);
+        setPriceInput("");
+        props.onClose?.();
     };
 
 
     return (
-        <Card className="mb-4" style={{ backgroundColor: "white" }}>
+        <Card className="mb-4 sub-form-card">
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
                     <Row>
@@ -180,56 +176,24 @@ export default function SubscriptionInputForm(props) {
                     </Row>
 
                     <Row>
-                        <Col md={8}>
-                            <Form.Group controlId="formSubImage" className="mb-3">
-                                <Form.Label>Subscription Image</Form.Label>
-                                <Form.Control type="file" accept="image/*" value={formData.img} onChange={(e) => {
-                                    const file = e.target.files[0];
-                                    console.log("Selected file:", file);
-                                    if (file) {
-                                        const imageUrl = URL.createObjectURL(file);
-                                        setPreviewImage(imageUrl);
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    Accent Color{" "}
+                                    <span
+                                        className="color-swatch-preview"
+                                        style={{ backgroundColor: formData.color }}
+                                    />
+                                </Form.Label>
+                                <HexColorPicker
+                                    className="accent-color-picker"
+                                    color={formData.color}
+                                    onChange={(color) =>
+                                        setFormData((prev) => ({ ...prev, color }))
                                     }
-                                }} />
-                            </Form.Group>
-                        </Col>
-
-                        <Col md={4} align="center">
-                            <p>Preview Image</p>
-                            <img style={{
-                                width: "60px",
-                                objectFit: "cover",
-                                objectPosition: "center",
-                                borderRadius: "8px"
-                            }} src={previewImage && previewImage || <></>}></img>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Background Color</Form.Label>
-                                <Form.Control
-                                    type="color"
-                                    name="color"
-                                    value={formData.color}
-                                    onChange={handleChange}
                                 />
                             </Form.Group>
                         </Col>
-
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Text Color</Form.Label>
-                                <Form.Control
-                                    type="color"
-                                    name="textColor"
-                                    value={formData.textColor}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                        </Col>
-
                     </Row>
                     <Row>
                         <Col xs={12} md={6}>
@@ -250,7 +214,6 @@ export default function SubscriptionInputForm(props) {
                                         price: 0.00,
                                         category: "",
                                         priority: "Medium",
-                                        textColor: "#000000",
                                         color: "#ffffff"
                                     });
                                     setPriceInput("")
