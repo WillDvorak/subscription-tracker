@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Card, Row, Col } from "react-bootstrap";
+import { HexColorPicker } from "react-colorful";
 import "./SubscriptionInputForm.css";
 
 
@@ -16,8 +17,6 @@ export default function SubscriptionInputForm(props) {
     });
 
     const [priceInput, setPriceInput] = useState("");
-
-    console.log("Form Data:", formData);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -71,6 +70,7 @@ export default function SubscriptionInputForm(props) {
             color: "#ffffff",
         });
         setPriceInput("");
+        props.onClose?.();
     };
 
 
@@ -178,12 +178,19 @@ export default function SubscriptionInputForm(props) {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Accent Color</Form.Label>
-                                <Form.Control
-                                    type="color"
-                                    name="color"
-                                    value={formData.color}
-                                    onChange={handleChange}
+                                <Form.Label>
+                                    Accent Color{" "}
+                                    <span
+                                        className="color-swatch-preview"
+                                        style={{ backgroundColor: formData.color }}
+                                    />
+                                </Form.Label>
+                                <HexColorPicker
+                                    className="accent-color-picker"
+                                    color={formData.color}
+                                    onChange={(color) =>
+                                        setFormData((prev) => ({ ...prev, color }))
+                                    }
                                 />
                             </Form.Group>
                         </Col>
