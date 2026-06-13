@@ -21,7 +21,7 @@ function App() {
   const [subscriptions, setSubscriptions] = useState([
     {
       id: 1,
-      priority: "High",
+      priority: "Extreme",
       title: "Netflix",
       price: 15.99,
       renewCycle: "Monthly",
@@ -69,6 +69,7 @@ function App() {
 
   return (<>
     <SubscriptionDataContext.Provider value={[subscriptions, setSubscriptions]}>
+    <AuthContext.Provider value={[token, setToken]}>
       <HashRouter>
         {/* Page content */}
         <Routes>
@@ -81,6 +82,7 @@ function App() {
           </Route>
         </Routes>
       </HashRouter>
+    </AuthContext.Provider>
     </SubscriptionDataContext.Provider>
   </>);
 }

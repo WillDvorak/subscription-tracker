@@ -33,7 +33,7 @@
     background-color: var(--bg-card);
     background-image: linear-gradient(
         90deg,
-        color-mix(in srgb, var(--item-accent) 90%, transparent) 0%,
+        color-mix(in srgb, var(--item-accent) 70%, transparent) 0%,
         transparent 75%
     );
 }
@@ -109,9 +109,14 @@
     font-weight: 600;
 }
 
-.sub-item-priority.priority-high {
+.sub-item-priority.priority-extreme {
     background-color: rgba(239, 68, 68, 0.12);
     color: #ef4444;
+}
+
+.sub-item-priority.priority-high {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #dc760f;
 }
 
 .sub-item-priority.priority-medium {

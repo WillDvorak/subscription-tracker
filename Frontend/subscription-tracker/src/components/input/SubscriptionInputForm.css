@@ -1,0 +1,70 @@
+.sub-form-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+}
+
+.sub-form-card .form-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.sub-form-card .form-control,
+.sub-form-card .form-select {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: var(--radius);
+}
+
+.sub-form-card .form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.sub-form-card .form-control:focus,
+.sub-form-card .form-select:focus {
+    background-color: var(--bg-sidebar);
+    border-color: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.2rem var(--accent-bg);
+}
+
+/* Date/color pickers render a dark-on-dark icon by default in some browsers */
+.sub-form-card .form-control[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.sub-form-card .form-select option {
+    background-color: var(--bg-sidebar);
+    color: var(--text-primary);
+}
+
+/* Color swatch inputs */
+.sub-form-card .form-control[type="color"] {
+    padding: 0.25rem;
+    height: 2.5rem;
+}
+
+.sub-form-card .btn-success {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.sub-form-card .btn-success:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+.sub-form-card .btn-secondary {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-subtle);
+    color: var(--text-primary);
+}
+
+.sub-form-card .btn-secondary:hover {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-strong);
+}
