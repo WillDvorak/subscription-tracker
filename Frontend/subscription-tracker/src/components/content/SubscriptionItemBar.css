@@ -14,6 +14,7 @@
     padding-left: calc(1.2rem + 4px);
     overflow: hidden;
     background-clip: padding-box;
+    justify-content: space-between;
 }
 
 .sub-item::before {
@@ -66,7 +67,7 @@
 
 .sub-item-title {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 2rem;
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.3;
@@ -79,6 +80,33 @@
     margin: 0.15rem 0 0;
     font-size: 0.8rem;
     color: var(--text-secondary);
+}
+
+.sub-item-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.sub-item-col-label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    margin-bottom: 0.3rem;
+}
+
+.sub-item-col-content {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sub-item-col-subcontent {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
 }
 
 .sub-item-price-block {

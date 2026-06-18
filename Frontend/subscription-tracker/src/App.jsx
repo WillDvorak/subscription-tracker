@@ -6,7 +6,6 @@ import './App.css';
 
 import Home from './components/screens/Home';
 import SubscriptionList from './components/screens/SubscriptionList';
-import AboutMe from './components/screens/AboutMe';
 import CalendarTab from './components/screens/CalendarTab';
 import SpendingScreen from './components/screens/SpendingScreen';
 import Layout from './components/layout/Layout';
@@ -77,8 +76,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/subscriptions" element={<SubscriptionList categories={categories} setCategories={setCategories} />} />
             <Route path="/calendar" element={<CalendarTab />} />
-            <Route path="/about" element={<AboutMe />} />
-            <Route path='/spending' element={<SpendingScreen subscriptions={subscriptions} />} />
+            <Route path='/spending' element={<SpendingScreen />} />
           </Route>
         </Routes>
       </HashRouter>

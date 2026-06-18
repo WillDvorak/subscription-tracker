@@ -15,10 +15,24 @@ function SubscriptionItemBar(props) {
 
     const [viewingMore, setViewingMore] = useState(false);
 
-    const { title, price, category, priority, color, imgUrl } = props.subInfo;
+    const { title, price, category, priority, color } = props.subInfo;
     const renewCycle = props.subInfo.renewCycle || props.subInfo.renewCycleTime;
     const renewDate = props.subInfo.renewDate;
     const priorityClass = priority ? `priority-${priority.toLowerCase()}` : "";
+    console.log(props.subInfo);
+
+    function formatRenewDate(renewDate) {
+        const [year, month, day] = renewDate.split("-");
+        const date = new Date(year, month - 1, day);
+
+        const formattedDate = new Intl.DateTimeFormat('en-US', {
+            month: 'short',
+            day: 'numeric',
+            timeZone: 'UTC'
+        }).format(date);
+
+        return formattedDate;
+    }
 
     return (
         <div
@@ -26,8 +40,8 @@ function SubscriptionItemBar(props) {
             onClick={() => setViewingMore(!viewingMore)}
             style={{ "--item-accent": color || "var(--accent)" }}
         >
-            {imgUrl ? (
-                <img className="sub-item-logo" src={imgUrl} alt={`${title} logo`} />
+            {false ? (
+                <img className="sub-item-logo" alt={`${title} logo`} />
             ) : (
                 <div
                     className="sub-item-logo-fallback"
@@ -39,10 +53,6 @@ function SubscriptionItemBar(props) {
 
             <div className="sub-item-info">
                 <h2 className="sub-item-title">{title}</h2>
-                <p className="sub-item-meta">
-                    {category || "Uncategorized"}
-                    {renewDate ? ` · Renews ${renewDate}` : ""}
-                </p>
                 {priority && (
                     <span className={`sub-item-priority ${priorityClass}`}>
                         {priority} priority
@@ -50,9 +60,21 @@ function SubscriptionItemBar(props) {
                 )}
             </div>
 
-            <div className="sub-item-price-block">
-                <div className="sub-item-price">${price}</div>
-                {renewCycle && <p className="sub-item-cycle">{renewCycle}</p>}
+            <div className="sub-item-col">
+                <div className="sub-item-col-label">Category</div>
+                <div className="sub-item-col-content">{category}</div>
+            </div>
+
+            <div className="sub-item-col">
+                <div className="sub-item-col-label">Billing Cycle</div>
+                <div className="sub-item-col-content">${price}</div>
+                <div className="sub-item-col-subcontent">{renewCycle}</div>
+            </div>
+
+            <div className="sub-item-col">
+                <div className="sub-item-col-label">Next Payment</div>
+                <div className="sub-item-col-content">{formatRenewDate(renewDate)}</div>
+                <div className="sub-item-col-subcontent">{renewDate.split("-")[0]}</div>
             </div>
         </div>
     );
