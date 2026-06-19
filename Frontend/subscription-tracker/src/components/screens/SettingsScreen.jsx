@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import "./SettingsScreen.css";
 
-const SECTIONS = ["General", "Account", "Notifications"];
+const SECTIONS = ["General", "Account", "Notifications", "Help"];
 
 function SettingsRow({ label, description, children }) {
     return (
@@ -57,11 +57,11 @@ export default function SettingsScreen() {
     // TODO: Display Name — currently hardcoded. Should be loaded from the backend user profile
     // (GET /api/user) on mount and saved back (PATCH /api/user) on change. Home.jsx could
     // greet the user by name once this is wired up.
-    const [displayName, setDisplayName] = useState("William");
+    const [displayName, setDisplayName] = useState("Will");
 
     // TODO: Email — same as display name, should come from the backend user profile.
     // Changing it requires re-verification flow on the backend.
-    const [email, setEmail] = useState("realestpineapple@gmail.com");
+    const [email, setEmail] = useState("");
 
     // Notifications
     // TODO: Renewal Alerts — needs a backend notification system (email or push).

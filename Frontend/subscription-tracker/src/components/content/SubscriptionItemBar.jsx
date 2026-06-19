@@ -19,7 +19,6 @@ function SubscriptionItemBar(props) {
     const renewCycle = props.subInfo.renewCycle || props.subInfo.renewCycleTime;
     const renewDate = props.subInfo.renewDate;
     const priorityClass = priority ? `priority-${priority.toLowerCase()}` : "";
-    console.log(props.subInfo);
 
     function formatRenewDate(renewDate) {
         const [year, month, day] = renewDate.split("-");
@@ -63,18 +62,19 @@ function SubscriptionItemBar(props) {
             <div className="sub-item-col">
                 <div className="sub-item-col-label">Category</div>
                 <div className="sub-item-col-content">{category}</div>
-            </div>
-
-            <div className="sub-item-col">
-                <div className="sub-item-col-label">Billing Cycle</div>
-                <div className="sub-item-col-content">${price}</div>
-                <div className="sub-item-col-subcontent">{renewCycle}</div>
+                <div style={{display: "hidden"}}>secret</div>
             </div>
 
             <div className="sub-item-col">
                 <div className="sub-item-col-label">Next Payment</div>
                 <div className="sub-item-col-content">{formatRenewDate(renewDate)}</div>
                 <div className="sub-item-col-subcontent">{renewDate.split("-")[0]}</div>
+            </div>
+
+            <div className="sub-item-col">
+                <div className="sub-item-col-label">Billing Cycle</div>
+                <div className="sub-item-col-content">${price}</div>
+                <div className="sub-item-col-subcontent">{renewCycle}</div>
             </div>
         </div>
     );
