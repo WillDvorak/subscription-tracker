@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Outlet, NavLink } from "react-router";
-import { HouseDoor, ColumnsGap, CalendarEvent, GraphUp, QuestionCircle, PlusCircle, BoxArrowInRight, BoxArrowLeft, BorderWidth } from "react-bootstrap-icons";
+import { HouseDoor, ColumnsGap, CalendarEvent, GraphUp, GearFill, PlusCircle, BoxArrowInRight, BoxArrowLeft } from "react-bootstrap-icons";
 import "./Layout.css";
 
 import { AuthContext } from "../contexts/AuthContext";
@@ -44,8 +44,8 @@ export default function Layout() {
                         <PlusCircle className="nav-icon"/> Add Subscription
                     </button>
                     <div className="sidebar-footer-links">
-                        <NavLink to="/help" className="nav-link-item">
-                            <QuestionCircle className="nav-icon"/> Help
+                        <NavLink to="/settings" className="nav-link-item">
+                            <GearFill className="nav-icon"/> Settings
                         </NavLink>
                         {token ? (
                             <button className="nav-link-item logout-btn" onClick={handleLogout}>

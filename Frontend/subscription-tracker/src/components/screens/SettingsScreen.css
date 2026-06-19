@@ -1,0 +1,213 @@
+.settings-header {
+    padding-bottom: 2rem;
+}
+
+.settings-eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.settings-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+    color: var(--text-primary);
+}
+
+.settings-desc {
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0;
+}
+
+/* Side nav */
+.settings-sidenav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 0.5rem;
+}
+
+.settings-sidenav-item {
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0.65rem 1rem;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.settings-sidenav-item:hover {
+    background-color: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.settings-sidenav-item.active {
+    background-color: var(--accent-bg);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Card */
+.settings-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.settings-card-title {
+    padding: 1.1rem 1.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-family: monospace;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-subtle);
+    background-color: var(--bg-sidebar);
+}
+
+/* Row */
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+}
+
+.settings-row-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.settings-row-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.settings-row-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+}
+
+.settings-row-control {
+    flex-shrink: 0;
+}
+
+/* Inputs */
+.settings-select,
+.settings-input {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    padding: 0.45rem 0.75rem;
+    min-width: 180px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.settings-select:focus,
+.settings-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-bg);
+}
+
+.settings-select option {
+    background-color: var(--bg-sidebar);
+    color: var(--text-primary);
+}
+
+/* Buttons */
+.settings-btn-secondary {
+    background-color: var(--bg-card-hover);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.settings-btn-secondary:hover {
+    background-color: var(--bg-sidebar);
+    border-color: var(--border-strong);
+}
+
+.settings-btn-danger {
+    background-color: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius);
+    color: #ef4444;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.settings-btn-danger:hover {
+    background-color: rgba(239, 68, 68, 0.16);
+}
+
+/* Toggle */
+.settings-toggle {
+    width: 44px;
+    height: 24px;
+    border-radius: 999px;
+    border: none;
+    padding: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.settings-toggle.on {
+    background-color: var(--accent);
+    justify-content: flex-end;
+}
+
+.settings-toggle.off {
+    background-color: var(--border-strong);
+    justify-content: flex-start;
+}
+
+.settings-toggle-knob {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.2s ease;
+    display: block;
+}
+
+/* Divider */
+.settings-divider {
+    height: 1px;
+    background-color: var(--border-subtle);
+    margin: 0;
+}

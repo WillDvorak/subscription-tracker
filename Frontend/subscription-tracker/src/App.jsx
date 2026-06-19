@@ -8,6 +8,7 @@ import Home from './components/screens/Home';
 import SubscriptionList from './components/screens/SubscriptionList';
 import CalendarTab from './components/screens/CalendarTab';
 import SpendingScreen from './components/screens/SpendingScreen';
+import SettingsScreen from './components/screens/SettingsScreen';
 import Layout from './components/layout/Layout';
 
 import { SubscriptionDataContext } from './components/contexts/SubscriptionDataContext';
@@ -77,6 +78,7 @@ function App() {
             <Route path="/subscriptions" element={<SubscriptionList categories={categories} setCategories={setCategories} />} />
             <Route path="/calendar" element={<CalendarTab />} />
             <Route path='/spending' element={<SpendingScreen />} />
+            <Route path='/settings' element={<SettingsScreen />} />
           </Route>
         </Routes>
       </HashRouter>
