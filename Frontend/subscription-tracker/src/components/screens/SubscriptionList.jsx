@@ -37,6 +37,8 @@ export default function SubscriptionList(props) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [activeFilter, setActiveFilter] = useState("all"); // "all" | "active" | "inactive"
+    const [search, setSearch] = useState("");
 
     const totalTracked = subscriptions.length;
     const monthlyBurn = subscriptions.reduce(
@@ -97,15 +99,45 @@ export default function SubscriptionList(props) {
             </div>
 
             <div className="sub-list-actions">
-                <h2>My Subscriptions</h2>
-                <Button className="sub-add-btn" onClick={() => setShowAddForm(true)}>
-                    <PlusCircle className="nav-icon" /> Add Subscription
-                </Button>
+                <div className="sub-list-filter-btns">
+                    {["all", "active", "inactive"].map((f) => (
+                        <button
+                            key={f}
+                            className={`sub-filter-btn ${activeFilter === f ? "sub-filter-btn--active" : ""}`}
+                            onClick={() => setActiveFilter(f)}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                <div className="sub-list-right-actions">
+                    <input
+                        className="sub-search-input"
+                        type="text"
+                        placeholder="Search subscriptions..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <Button className="sub-add-btn" onClick={() => setShowAddForm(true)}>
+                        <PlusCircle className="nav-icon" /> Add Subscription
+                    </Button>
+                </div>
             </div>
 
             <Row>
                 <Col xs={12}>
-                    {subscriptions && subscriptions.map((sub) => (
+                    {subscriptions.filter((sub) => {
+                        if (activeFilter === "active" && sub.active === false) return false;
+                        if (activeFilter === "inactive" && sub.active !== false) return false;
+                        if (search.trim()) {
+                            const q = search.toLowerCase();
+                            return (
+                                sub.title?.toLowerCase().includes(q) ||
+                                sub.category?.toLowerCase().includes(q)
+                            );
+                        }
+                        return true;
+                    }).map((sub) => (
                         <SubscriptionItemBar
                             key={sub.id}
                             subInfo={sub}

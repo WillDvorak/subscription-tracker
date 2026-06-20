@@ -103,15 +103,72 @@
     margin-bottom: 1rem;
 }
 
-.sub-list-actions h2 {
+.sub-list-active-sort-buttons {
+    border: 1px solid var(--border-strong);
+    padding: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sub-list-filter-btns {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.sub-filter-btn {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.sub-filter-btn:hover {
+    background-color: var(--bg-card-hover);
     color: var(--text-primary);
-    font-size: 1.4rem;
-    margin: 0;
+}
+
+.sub-filter-btn--active {
+    background-color: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.sub-list-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sub-search-input {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.85rem;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sub-search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.sub-search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-bg);
 }
 
 .sub-add-btn {
     background-color: var(--accent);
     border-color: var(--accent);
+    border-radius: var(--radius);
 }
 
 .sub-add-btn:hover {
