@@ -12,7 +12,7 @@
 }
 
 .sub-item--inactive {
-    opacity: 0.4;
+    opacity: 0.5;
 }
 
 .sub-item-main {
@@ -85,14 +85,23 @@
 }
 
 .sub-action-deactivate {
-    background-color: var(--bg-card-hover);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-subtle);
+    background-color: rgba(234, 179, 8, 0.08);
+    color: var(--warning);
+    border: 1px solid rgba(234, 179, 8, 0.2);
 }
 
 .sub-action-deactivate:hover {
-    background-color: var(--border-subtle);
-    color: var(--text-primary);
+    background-color: rgba(234, 179, 8, 0.18);
+}
+
+.sub-action-reactivate {
+    background-color: var(--success-bg);
+    color: var(--success);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.sub-action-reactivate:hover {
+    background-color: rgba(34, 197, 94, 0.18);
 }
 
 .sub-action-delete {

@@ -115,7 +115,10 @@ function SubscriptionItemBar(props) {
                     <button className="sub-action-btn sub-action-edit" onClick={handleEdit}>
                         Edit
                     </button>
-                    <button className="sub-action-btn sub-action-deactivate" onClick={handleDeactivate}>
+                    <button
+                        className={`sub-action-btn ${active === false ? "sub-action-reactivate" : "sub-action-deactivate"}`}
+                        onClick={handleDeactivate}
+                    >
                         {active === false ? "Reactivate" : "Deactivate"}
                     </button>
                     <div className="sub-action-delete-group">
