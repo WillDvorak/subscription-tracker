@@ -1,0 +1,204 @@
+.spending-header {
+    padding-bottom: 2rem;
+}
+
+.spending-eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.spending-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.spending-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+    color: var(--text-primary);
+}
+
+.spending-burn {
+    text-align: right;
+}
+
+.spending-burn-label {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.spending-burn-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: monospace;
+}
+
+.spending-desc {
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.spending-stats-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.spending-stat-card {
+    flex: 1;
+    min-width: 160px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.spending-stat-label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    margin-bottom: 0.6rem;
+}
+
+.spending-stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.spending-stat-value--sm {
+    font-size: 1.2rem;
+}
+
+/* Section label */
+.spending-section-label {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--text-muted);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Chart cards */
+.spending-chart-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.spending-chart-title {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.spending-chart-wrap {
+    position: relative;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.spending-chart-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.spending-chart-center-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: monospace;
+    line-height: 1.1;
+}
+
+.spending-chart-center-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Dark tables */
+.spending-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.spending-table th {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.68rem;
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--text-muted);
+    background-color: var(--bg-sidebar);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.spending-table td {
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.spending-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.spending-table tbody tr:hover td {
+    background-color: var(--bg-card-hover);
+}
+
+.spending-table-wrap {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.spending-empty {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    padding: 1.5rem;
+    text-align: center;
+}

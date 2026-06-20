@@ -1,192 +1,186 @@
-// SpendingScreen.jsx
-import { Card, Row, Col, Container } from "react-bootstrap";
+import { useContext } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 import { Doughnut } from "react-chartjs-2";
-
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import CategoryTotalsTable from "../content/CategoryTotalsTable";
 import SubscriptionBreakdownTable from "../content/SubscriptionBreakdownTable";
+import { SubscriptionDataContext } from "../contexts/SubscriptionDataContext";
+import "./SpendingScreen.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const CHART_PALETTE = [
+    "#a78bfa", "#34d399", "#60a5fa", "#f59e0b",
+    "#f87171", "#e879f9", "#2dd4bf", "#fb923c",
+];
 
-
-export default function SpendingScreen({ subscriptions = [] }) {
-
-  // Helper: normalize price to a monthly cost based on renew cycle
-  function getMonthlyCost(sub) {
-    const pricePerCycle = parseFloat(sub.price) || 0;
-    const cycle = (sub.renewCycle || sub.renewCycleTime || "")
-      .toLowerCase()
-      .trim();
-
+function getMonthlyCost(sub) {
+    const price = parseFloat(sub.price) || 0;
+    const cycle = (sub.renewCycle || sub.renewCycleTime || "").toLowerCase().trim();
     switch (cycle) {
-      case "weekly":
-        // billed once per week → ~52 times per year → 52/12 per month
-        return (pricePerCycle * 52) / 12;
-      case "monthly":
-        return pricePerCycle;
-      case "quarterly":
-        // once every 3 months
-        return pricePerCycle / 3;
-      case "biannually":
-        // once every 6 months
-        return pricePerCycle / 6;
-      case "yearly":
-        // once per year
-        return pricePerCycle / 12;
-      default:
-        // "Other" or missing – treat as 0 for now
-        return 0;
+        case "weekly":     return (price * 52) / 12;
+        case "monthly":    return price;
+        case "quarterly":  return price / 3;
+        case "biannually": return price / 6;
+        case "yearly":     return price / 12;
+        default:           return 0;
     }
-  }
+}
 
-  // Helper: generate dynamic colors based on number of categories
-  function generateCategoryColors(count) {
-    const backgroundColor = [];
-    const borderColor = [];
-
-    for (let i = 0; i < count; i++) {
-      const hue = (i * 360) / Math.max(count, 1); // spread evenly around the color wheel
-
-      // Softer fill
-      backgroundColor.push(`hsla(${hue}, 70%, 55%, 0.2)`);
-      // Stronger border
-      borderColor.push(`hsla(${hue}, 70%, 45%, 1)`);
-    }
-
-    return { backgroundColor, borderColor };
-  }
-
-  // Helper: build chart.js doughnut data from subscriptions
-  function buildCategoryChartData(subscriptions, mode = "monthly") {
-    const categoryTotals = {};
-
+function buildChartData(subscriptions, mode = "monthly") {
+    const totals = {};
     subscriptions.forEach((sub) => {
-      const monthly = getMonthlyCost(sub);
-      const value = mode === "yearly" ? monthly * 12 : monthly;
-      const categoryName =
-        (sub.category && sub.category.trim()) || "Uncategorized";
-
-      if (!categoryTotals[categoryName]) {
-        categoryTotals[categoryName] = 0;
-      }
-      categoryTotals[categoryName] += value;
+        const monthly = getMonthlyCost(sub);
+        const value = mode === "yearly" ? monthly * 12 : monthly;
+        const cat = (sub.category && sub.category.trim()) || "Uncategorized";
+        totals[cat] = (totals[cat] || 0) + value;
     });
 
-    const entries = Object.entries(categoryTotals); // [ [categoryName, total], ... ]
-    const labels = entries.map(([name]) => name);
-    const dataValues = entries.map(([, total]) => Number(total.toFixed(2)));
-
-    const { backgroundColor, borderColor } = generateCategoryColors(
-      labels.length
-    );
+    const labels = Object.keys(totals);
+    const data = Object.values(totals).map((v) => Number(v.toFixed(2)));
+    const colors = labels.map((_, i) => CHART_PALETTE[i % CHART_PALETTE.length]);
 
     return {
-      labels,
-      datasets: [
-        {
-          label:
-            mode === "yearly"
-              ? "Yearly Spending by Category"
-              : "Monthly Spending by Category",
-          data: dataValues,
-          backgroundColor,
-          borderColor,
-          borderWidth: 1,
-        },
-      ],
+        labels,
+        datasets: [{
+            data,
+            backgroundColor: colors.map((c) => c + "33"),
+            borderColor: colors,
+            borderWidth: 2,
+        }],
     };
-  }
+}
 
-
-  // Aggregate totals + category totals
-  const { monthlyTotal, yearlyTotal, categoryTotals } = subscriptions.reduce(
-    (acc, sub) => {
-      const monthly = getMonthlyCost(sub);
-      const yearly = monthly * 12;
-
-      acc.monthlyTotal += monthly;
-      acc.yearlyTotal += yearly;
-
-      const categoryName =
-        (sub.category && sub.category.trim()) || "Uncategorized";
-
-      if (!acc.categoryTotals[categoryName]) {
-        acc.categoryTotals[categoryName] = {
-          monthlyTotal: 0,
-          yearlyTotal: 0,
-        };
-      }
-
-      acc.categoryTotals[categoryName].monthlyTotal += monthly;
-      acc.categoryTotals[categoryName].yearlyTotal += yearly;
-
-      return acc;
+const chartOptions = {
+    cutout: "68%",
+    plugins: {
+        legend: {
+            labels: {
+                color: "#9898b0",
+                font: { family: "monospace", size: 11 },
+                boxWidth: 12,
+                padding: 16,
+            },
+        },
+        tooltip: {
+            callbacks: {
+                label: (ctx) => `  $${ctx.raw.toFixed(2)}`,
+            },
+        },
     },
-    {
-      monthlyTotal: 0,
-      yearlyTotal: 0,
-      categoryTotals: {},
-    }
-  );
+};
 
-  const categoryEntries = Object.entries(categoryTotals);
-  const monthlyCategoryChartData = buildCategoryChartData(
-    subscriptions,
-    "monthly"
-  );
-  const yearlyCategoryChartData = buildCategoryChartData(
-    subscriptions,
-    "yearly"
-  );
+export default function SpendingScreen() {
+    const [subscriptions] = useContext(SubscriptionDataContext);
 
-  return (
-    <Container>
-      <h1 style={{ color: "white" }}>Overall Spending: </h1>
+    const { monthlyTotal, yearlyTotal, categoryTotals } = subscriptions.reduce(
+        (acc, sub) => {
+            const monthly = getMonthlyCost(sub);
+            acc.monthlyTotal += monthly;
+            acc.yearlyTotal += monthly * 12;
+            const cat = (sub.category && sub.category.trim()) || "Uncategorized";
+            if (!acc.categoryTotals[cat]) {
+                acc.categoryTotals[cat] = { monthlyTotal: 0, yearlyTotal: 0 };
+            }
+            acc.categoryTotals[cat].monthlyTotal += monthly;
+            acc.categoryTotals[cat].yearlyTotal += monthly * 12;
+            return acc;
+        },
+        { monthlyTotal: 0, yearlyTotal: 0, categoryTotals: {} }
+    );
 
-      {/* Overall totals summary + charts */}
-      <Row>
-        <Col md={6}>
-          <Card style={{ alignItems: "center" }}>
-            <h5>Estimated Monthly Spending</h5>
-            <Doughnut
-              data={monthlyCategoryChartData}
-              style={{ maxHeight: 300, maxWidth: 300 }}
+    const categoryEntries = Object.entries(categoryTotals);
+    const topCategory = categoryEntries.sort(
+        (a, b) => b[1].monthlyTotal - a[1].monthlyTotal
+    )[0]?.[0] ?? "—";
+
+    const monthlyCategoryChartData = buildChartData(subscriptions, "monthly");
+    const yearlyCategoryChartData = buildChartData(subscriptions, "yearly");
+
+    return (
+        <Container fluid>
+            {/* Header */}
+            <div className="spending-header">
+                <div className="spending-eyebrow">Financial Overview</div>
+                <div className="spending-title-row">
+                    <h1 className="spending-title">Spending Analysis</h1>
+                    <div className="spending-burn">
+                        <div className="spending-burn-label">Monthly Burn</div>
+                        <div className="spending-burn-value">
+                            ${monthlyTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </div>
+                </div>
+                <p className="spending-desc">
+                    Track where your money goes across all recurring charges.
+                </p>
+
+                <div className="spending-stats-row">
+                    <div className="spending-stat-card">
+                        <div className="spending-stat-label">Monthly Total</div>
+                        <div className="spending-stat-value">
+                            ${monthlyTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </div>
+                    <div className="spending-stat-card">
+                        <div className="spending-stat-label">Annual Projection</div>
+                        <div className="spending-stat-value">
+                            ${yearlyTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </div>
+                    <div className="spending-stat-card">
+                        <div className="spending-stat-label">Categories</div>
+                        <div className="spending-stat-value">{categoryEntries.length}</div>
+                    </div>
+                    <div className="spending-stat-card">
+                        <div className="spending-stat-label">Top Category</div>
+                        <div className="spending-stat-value spending-stat-value--sm">{topCategory}</div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Charts */}
+            <div className="spending-section-label">Spending by Category</div>
+            <Row className="mb-4 g-3">
+                <Col md={6}>
+                    <div className="spending-chart-card">
+                        <div className="spending-chart-title">Monthly</div>
+                        <div className="spending-chart-wrap">
+                            <Doughnut data={monthlyCategoryChartData} options={chartOptions} />
+                            <div className="spending-chart-center">
+                                <div className="spending-chart-center-value">
+                                    ${monthlyTotal.toFixed(2)}
+                                </div>
+                                <div className="spending-chart-center-label">/ mo</div>
+                            </div>
+                        </div>
+                    </div>
+                </Col>
+                <Col md={6}>
+                    <div className="spending-chart-card">
+                        <div className="spending-chart-title">Annual</div>
+                        <div className="spending-chart-wrap">
+                            <Doughnut data={yearlyCategoryChartData} options={chartOptions} />
+                            <div className="spending-chart-center">
+                                <div className="spending-chart-center-value">
+                                    ${yearlyTotal.toFixed(2)}
+                                </div>
+                                <div className="spending-chart-center-label">/ yr</div>
+                            </div>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+
+            {/* Tables */}
+            <div className="spending-section-label">Category Breakdown</div>
+            <CategoryTotalsTable categoryEntries={categoryEntries} />
+
+            <div className="spending-section-label">Subscription Breakdown</div>
+            <SubscriptionBreakdownTable
+                subscriptions={subscriptions}
+                getMonthlyCost={getMonthlyCost}
             />
-            <h2>${monthlyTotal.toFixed(2)}</h2>
-          </Card>
-        </Col>
-
-        <Col md={6}>
-          <Card style={{ alignItems: "center", height: "100%" }}>
-            <h5>Estimated Yearly Spending</h5>
-            <Doughnut
-              data={yearlyCategoryChartData}
-              style={{ maxHeight: 300, maxWidth: 300 }}
-            />
-            <h2>${yearlyTotal.toFixed(2)}</h2>
-          </Card>
-        </Col>
-      </Row>
-
-      <p className="text-muted mb-0" style={{ marginTop: "0.5rem" }}>
-        Based on each subscription&apos;s billed price and renewal cycle.
-      </p>
-
-      {/* Category totals table */}
-      <CategoryTotalsTable categoryEntries={categoryEntries} />
-
-      {/* Subscription breakdown table */}
-      <SubscriptionBreakdownTable
-        subscriptions={subscriptions}
-        getMonthlyCost={getMonthlyCost}
-      />
-    </Container>
-  );
+        </Container>
+    );
 }

@@ -1,0 +1,259 @@
+.home-header {
+    padding-bottom: 1.5rem;
+}
+
+.home-eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.home-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+    color: var(--text-primary);
+}
+
+.home-desc {
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0;
+}
+
+/* Stat cards */
+.home-stats-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.home-stat-card {
+    flex: 1;
+    min-width: 160px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.home-stat-card:hover {
+    border-color: var(--border-strong);
+    background-color: var(--bg-card-hover);
+}
+
+.home-stat-label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    margin-bottom: 0.6rem;
+}
+
+.home-stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.home-stat-value.accent { color: var(--accent); }
+.home-stat-value.warn   { color: var(--warning); }
+
+.home-stat-suffix {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-left: 0.35rem;
+}
+
+/* Widgets */
+.home-widget {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.home-widget-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.home-widget-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: monospace;
+}
+
+.home-widget-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.home-empty {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* Renewal items */
+.home-renewal-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    position: relative;
+}
+
+.home-renewal-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.home-renewal-item::before {
+    content: "";
+    position: absolute;
+    left: -1.25rem;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--item-accent);
+    border-radius: 0 2px 2px 0;
+    opacity: 0.7;
+}
+
+.home-renewal-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: white;
+    overflow: hidden;
+}
+
+.home-renewal-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.home-renewal-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.home-renewal-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.home-renewal-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+
+.home-renewal-right {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.home-renewal-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.home-renewal-days {
+    font-size: 0.72rem;
+    font-family: monospace;
+    font-weight: 700;
+    margin-top: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.home-renewal-days.today  { color: #ef4444; }
+.home-renewal-days.urgent { color: var(--warning); }
+.home-renewal-days.soon   { color: var(--text-secondary); }
+.home-renewal-days.renewed { color: var(--success); }
+
+/* Category bars */
+.home-category-item {
+    margin-bottom: 1rem;
+}
+
+.home-category-item:last-of-type {
+    margin-bottom: 0.5rem;
+}
+
+.home-category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.35rem;
+}
+
+.home-category-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.home-category-amount {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.home-category-bar-track {
+    height: 4px;
+    background-color: var(--border-subtle);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.home-category-bar-fill {
+    height: 100%;
+    background-color: var(--accent);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.home-category-link {
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: monospace;
+    text-align: right;
+}
+
+.home-category-link:hover {
+    text-decoration: underline;
+}

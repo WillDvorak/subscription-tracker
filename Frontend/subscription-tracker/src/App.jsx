@@ -6,9 +6,9 @@ import './App.css';
 
 import Home from './components/screens/Home';
 import SubscriptionList from './components/screens/SubscriptionList';
-import AboutMe from './components/screens/AboutMe';
 import CalendarTab from './components/screens/CalendarTab';
 import SpendingScreen from './components/screens/SpendingScreen';
+import SettingsScreen from './components/screens/SettingsScreen';
 import Layout from './components/layout/Layout';
 
 import { SubscriptionDataContext } from './components/contexts/SubscriptionDataContext';
@@ -27,8 +27,7 @@ function App() {
       renewCycle: "Monthly",
       renewDate: "2025-12-19",
       category: "Entertainment",
-      color: "red",
-      textColor: "white",
+      color: "#e50914",
       imgUrl: "https://images.ctfassets.net/y2ske730sjqp/5QQ9SVIdc1tmkqrtFnG9U1/de758bba0f65dcc1c6bc1f31f161003d/BrandAssets_Logos_02-NSymbol.jpg?w=940"
     },
     {
@@ -39,8 +38,7 @@ function App() {
       renewCycle: "Monthly",
       renewDate: "2025-12-23",
       category: "Music",
-      color: "green",
-      textColor: "white",
+      color: "#1db954",
       imgUrl: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
     },
     {
@@ -51,9 +49,7 @@ function App() {
       renewCycle: "Monthly",
       renewDate: "2025-12-17",
       category: "Entertainment",
-      color: "blue",
-      textColor: "white",
-
+      color: "#0063e5",
       imgUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"
     }
   ]);
@@ -77,8 +73,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/subscriptions" element={<SubscriptionList categories={categories} setCategories={setCategories} />} />
             <Route path="/calendar" element={<CalendarTab />} />
-            <Route path="/about" element={<AboutMe />} />
-            <Route path='/spending' element={<SpendingScreen subscriptions={subscriptions} />} />
+            <Route path='/spending' element={<SpendingScreen />} />
+            <Route path='/settings' element={<SettingsScreen />} />
           </Route>
         </Routes>
       </HashRouter>

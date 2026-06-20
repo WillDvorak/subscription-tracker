@@ -1,135 +1,107 @@
-import { Form, Button, Card, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { Form, Button, Card, Row, Col } from "react-bootstrap";
+import { HexColorPicker } from "react-colorful";
+import "./SubscriptionInputForm.css";
 
 /**
- * @param {object}  props.selectedSubsciption  subscription object to edit
- * @param {func}    props.setSubscriptions     state setter from parent
- * @param {func}    props.setIsEditing         toggle edit mode off
+ * @param {object}  props.selectedSubscription  subscription object to edit
+ * @param {func}    props.setSubscriptions       state setter from parent
+ * @param {func}    props.setIsEditing           toggle edit mode off
+ * @param {func}    props.onClose                close the modal
  */
+// Converts any CSS color (named, rgb, hex) to a hex string for HexColorPicker
+function toHex(color) {
+    if (!color) return "#7c3aed";
+    if (/^#[0-9a-f]{6}$/i.test(color)) return color;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, 1, 1);
+    const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+    return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+
 function EditSubscriptionForm(props) {
 
-    const selectedSubsciption = props.selectedSubsciption || {
-        id: null,
-        title: "",
-        renewCycle: "",
-        renewDate: "",
-        price: 0.0,
-        category: "",
-        priority: "Medium",
-        textColor: "#000000",
-        color: "#ffffff",
-    };
+    const sub = props.selectedSubscription || {};
 
     const [formData, setFormData] = useState({
-        title: selectedSubsciption.title,
-        renewCycle: selectedSubsciption.renewCycle,
-        renewDate: selectedSubsciption.renewDate,
-        price: selectedSubsciption.price,
-        category: selectedSubsciption.category,
-        priority: selectedSubsciption.priority || "Medium",
-        textColor: selectedSubsciption.textColor || "#000000",
-        color: selectedSubsciption.color || "#ffffff",
+        title: sub.title || "",
+        renewCycle: sub.renewCycle || "Monthly",
+        renewDate: sub.renewDate || "",
+        category: sub.category || "",
+        priority: sub.priority || "Medium",
+        color: toHex(sub.color),
     });
 
-    const [priceInput, setPriceInput] = useState(
-        selectedSubsciption.price?.toString() || ""
-    );
+    const [priceInput, setPriceInput] = useState(sub.price?.toString() || "");
 
-    // Update form if a different subscription gets selected
+    // Sync form when a different subscription is selected
     useEffect(() => {
         setFormData({
-            title: selectedSubsciption.title,
-            renewCycle: selectedSubsciption.renewCycle,
-            renewDate: selectedSubsciption.renewDate,
-            price: selectedSubsciption.price,
-            category: selectedSubsciption.category,
-            priority: selectedSubsciption.priority || "Medium",
-            textColor: selectedSubsciption.textColor || "#000000",
-            color: selectedSubsciption.color || "#ffffff",
+            title: sub.title || "",
+            renewCycle: sub.renewCycle || "Monthly",
+            renewDate: sub.renewDate || "",
+            category: sub.category || "",
+            priority: sub.priority || "Medium",
+            color: toHex(sub.color),
         });
-        setPriceInput(selectedSubsciption.price?.toString() || "");
-    }, []);
+        setPriceInput(sub.price?.toString() || "");
+    }, [props.selectedSubscription]);
 
-    // digits, optional one dot, max 2 decimals
     const priceRegex = /^\d*\.?\d{0,2}$/;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
     const handlePriceChange = (e) => {
         const { value } = e.target;
-
         if (value === "" || priceRegex.test(value)) {
             setPriceInput(value);
         }
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const newPrice =
-            priceInput === "" ? formData.price : parseFloat(priceInput).toFixed(2);
-
-        console.log("Submitting edit with data:", {
-            ...formData,
-            price: newPrice,
-        });
+        const newPrice = priceInput === "" ? sub.price : parseFloat(priceInput).toFixed(2);
 
         props.setSubscriptions((prev) =>
-            prev.map((sub) =>
-                sub.id === selectedSubsciption.id
-                    ? {
-                        ...sub,
-                        title: formData.title,
-                        renewCycle: formData.renewCycle,
-                        renewDate: formData.renewDate,
-                        price: newPrice,
-                        category: formData.category,
-                        priority: formData.priority,
-                        textColor: formData.textColor,
-                        color: formData.color,
-                    }
-                    : sub
+            prev.map((s) =>
+                s.id === sub.id
+                    ? { ...s, ...formData, price: newPrice }
+                    : s
             )
         );
 
-        props.setIsEditing(false);
+        props.onClose?.();
     };
 
     return (
-        <Card>
+        <Card className="mb-4 sub-form-card">
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
-                    {/* Title */}
                     <Row>
-                        <Form.Group className="mb-3" controlId="formTitle">
-                            <Form.Label>Current Title: {selectedSubsciption.title}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="title"
-                                placeholder="Enter new title"
-                                onChange={handleChange}
-                                value={formData.title}
-                                required
-                            />
-                        </Form.Group>
-                    </Row>
-
-                    {/* Price */}
-                    <Row>
-                        <Col>
+                        <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>
-                                    Current Price: {selectedSubsciption.price}
-                                </Form.Label>
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Price</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="price"
-                                    placeholder={selectedSubsciption.price}
                                     value={priceInput}
                                     onChange={handlePriceChange}
                                     required
@@ -138,19 +110,11 @@ function EditSubscriptionForm(props) {
                         </Col>
                     </Row>
 
-                    {/* Renewal Cycle */}
                     <Row>
-                        <Col>
-                            <Form.Group className="mb-3" controlId="formRenewCycle">
-                                <Form.Label>
-                                    Current Renewal Cycle: {selectedSubsciption.renewCycle}
-                                </Form.Label>
-                                <Form.Select
-                                    name="renewCycle"
-                                    onChange={handleChange}
-                                    value={formData.renewCycle}
-                                    required
-                                >
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Renewal Cycle</Form.Label>
+                                <Form.Select name="renewCycle" value={formData.renewCycle} onChange={handleChange} required>
                                     <option value="Weekly">Weekly</option>
                                     <option value="Monthly">Monthly</option>
                                     <option value="Quarterly">Quarterly</option>
@@ -160,50 +124,36 @@ function EditSubscriptionForm(props) {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                    </Row>
-
-                    {/* Renewal Date */}
-                    <Row>
-                        <Col>
-                            <Form.Group className="mb-3" controlId="formRenewDate">
-                                <Form.Label>
-                                    Current Renewal Date: {selectedSubsciption.renewDate}
-                                </Form.Label>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Renewal Date</Form.Label>
                                 <Form.Control
                                     type="date"
                                     name="renewDate"
-                                    placeholder="e.g. Dec. 19"
-                                    onChange={handleChange}
                                     value={formData.renewDate}
+                                    onChange={handleChange}
                                     required
                                 />
                             </Form.Group>
                         </Col>
                     </Row>
 
-                    {/* Category & Priority */}
                     <Row>
                         <Col md={6}>
-                            <Form.Group className="mb-3" controlId="formCategory">
+                            <Form.Group className="mb-3">
                                 <Form.Label>Category</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="category"
-                                    placeholder="e.g. Entertainment"
-                                    onChange={handleChange}
                                     value={formData.category}
+                                    onChange={handleChange}
                                 />
                             </Form.Group>
                         </Col>
-
                         <Col md={6}>
-                            <Form.Group className="mb-3" controlId="formPriority">
+                            <Form.Group className="mb-3">
                                 <Form.Label>Priority</Form.Label>
-                                <Form.Select
-                                    name="priority"
-                                    value={formData.priority}
-                                    onChange={handleChange}
-                                >
+                                <Form.Select name="priority" value={formData.priority} onChange={handleChange}>
                                     <option value="Low">Low</option>
                                     <option value="Medium">Medium</option>
                                     <option value="High">High</option>
@@ -213,53 +163,37 @@ function EditSubscriptionForm(props) {
                         </Col>
                     </Row>
 
-                    {/* Colors */}
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Background Color</Form.Label>
-                                <Form.Control
-                                    type="color"
-                                    name="color"
-                                    value={formData.color}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                        </Col>
-
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Text Color</Form.Label>
-                                <Form.Control
-                                    type="color"
-                                    name="textColor"
-                                    value={formData.textColor}
-                                    onChange={handleChange}
+                                <Form.Label>
+                                    Accent Color{" "}
+                                    <span
+                                        className="color-swatch-preview"
+                                        style={{ backgroundColor: formData.color }}
+                                    />
+                                </Form.Label>
+                                <HexColorPicker
+                                    className="accent-color-picker"
+                                    color={formData.color}
+                                    onChange={(color) => setFormData((prev) => ({ ...prev, color }))}
                                 />
                             </Form.Group>
                         </Col>
                     </Row>
 
-                    {/* Actions */}
                     <Row>
-                        <Col xs={12} md={6} className="mb-2">
-                            <Button
-                                variant="success"
-                                type="submit"
-                                style={{ width: "100%" }}
-                            >
+                        <Col xs={12} md={6}>
+                            <Button type="submit" variant="success" style={{ width: "100%" }}>
                                 Save Changes
                             </Button>
                         </Col>
                         <Col xs={12} md={6}>
                             <Button
-                                variant="danger"
+                                type="button"
+                                variant="secondary"
                                 style={{ width: "100%" }}
-                                onClick={() => {
-                                    props.setIsEditing(false)
-                                    props.setIsCreating(true)
-                                }
-                                }
+                                onClick={() => props.onClose?.()}
                             >
                                 Cancel
                             </Button>
