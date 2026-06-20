@@ -3,8 +3,9 @@ import "./SubscriptionItemBar.css";
 
 /**
  *
- * @param {object} props.subInfo -> Object containing: title, price, category,
- *                                      priority, renewCycle, renewDate, color, imgUrl
+ * @param {object} props.subInfo -> Object containing: title, price, renewCycle,
+ *                                      renewDate, nextRenewalDate, lastRenewalDate,
+ *                                      priority, active, category, color, and imgUrl
  * @param {CallbackFunction} props.setSubs -> setSubscriptionsStateVariable
  * @param {CallbackFunction} props.setSelected
  * @param {CallbackFunction} props.setIsEditing
@@ -17,9 +18,8 @@ function SubscriptionItemBar(props) {
     const [viewingMore, setViewingMore] = useState(false);
     const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-    const { title, price, category, priority, color, active } = props.subInfo;
-    const renewCycle = props.subInfo.renewCycle || props.subInfo.renewCycleTime;
-    const renewDate = props.subInfo.renewDate;
+    const { title, price, renewCycle, renewDate, nextRenewalDate, lastRenewalDate,
+            priority, active, category, color, imgUrl } = props.subInfo;
     const priorityClass = priority ? `priority-${priority.toLowerCase()}` : "";
 
     function formatRenewDate(renewDate) {
@@ -70,8 +70,8 @@ function SubscriptionItemBar(props) {
         >
             {/* Main row — clickable to expand */}
             <div className="sub-item-main" onClick={() => { setViewingMore(!viewingMore); setConfirmingDelete(false); }}>
-                {false ? (
-                    <img className="sub-item-logo" alt={`${title} logo`} />
+                {imgUrl ? (
+                    <img className="sub-item-logo" src={imgUrl} alt={`${title} logo`} onError={(e) => { e.target.style.display = "none"; }} />
                 ) : (
                     <div
                         className="sub-item-logo-fallback"
@@ -98,13 +98,13 @@ function SubscriptionItemBar(props) {
 
                 <div className="sub-item-col">
                     <div className="sub-item-col-label">Next Payment</div>
-                    <div className="sub-item-col-content">{formatRenewDate(renewDate)}</div>
+                    <div className="sub-item-col-content">{formatRenewDate(nextRenewalDate)}</div>
                     <div className="sub-item-col-subcontent">{renewDate.split("-")[0]}</div>
                 </div>
 
                 <div className="sub-item-col">
                     <div className="sub-item-col-label">Billing Cycle</div>
-                    <div className="sub-item-col-content">${price}</div>
+                    <div className="sub-item-col-content">${parseFloat(price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                     <div className="sub-item-col-subcontent">{renewCycle}</div>
                 </div>
             </div>

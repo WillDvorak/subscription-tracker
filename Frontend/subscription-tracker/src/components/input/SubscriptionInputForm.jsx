@@ -13,7 +13,8 @@ export default function SubscriptionInputForm(props) {
         price: 0.00,
         category: "",
         priority: "Medium",
-        color: "#ffffff"
+        color: "#ffffff",
+        imgUrl: "",
     });
 
     const [priceInput, setPriceInput] = useState("");
@@ -57,17 +58,19 @@ export default function SubscriptionInputForm(props) {
                 color: formData.color,
                 priority: formData.priority,
                 category: formData.category,
+                imgUrl: formData.imgUrl,
             },
         ]);
 
         setFormData({
             title: "",
-            renewCycle: "",
+            renewCycle: "Monthly",
             renewDate: "",
             price: "",
             category: "",
-            priority: 5,
+            priority: "Medium",
             color: "#ffffff",
+            imgUrl: "",
         });
         setPriceInput("");
         props.onClose?.();
@@ -193,6 +196,30 @@ export default function SubscriptionInputForm(props) {
                                     }
                                 />
                             </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Image URL</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="imgUrl"
+                                    placeholder="https://..."
+                                    value={formData.imgUrl}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                            {formData.imgUrl && (
+                                <>
+                                    <div className="img-url-preview">
+                                        <img
+                                            src={formData.imgUrl}
+                                            alt="Preview"
+                                            onError={(e) => { e.target.style.display = "none"; }}
+                                            onLoad={(e) => { e.target.style.display = "block"; }}
+                                        />
+                                    </div>
+                                </>
+                            )}
                         </Col>
                     </Row>
                     <Row>
