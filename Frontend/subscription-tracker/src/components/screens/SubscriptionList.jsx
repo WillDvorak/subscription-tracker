@@ -129,6 +129,19 @@ export default function SubscriptionList(props) {
                     />
                 </Modal.Body>
             </Modal>
+
+            <Modal show={isEditing} onHide={() => setIsEditing(false)} centered>
+                <Modal.Header closeButton closeVariant="white">
+                    <Modal.Title>Edit Subscription</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <EditSubscriptionForm
+                        selectedSubscription={selectedSubscription}
+                        setSubscriptions={setSubscriptions}
+                        onClose={() => setIsEditing(false)}
+                    />
+                </Modal.Body>
+            </Modal>
         </Container>
     );
 }
