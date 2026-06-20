@@ -33,6 +33,7 @@ function EditSubscriptionForm(props) {
         category: sub.category || "",
         priority: sub.priority || "Medium",
         color: toHex(sub.color),
+        imgUrl: sub.imgUrl || "",
     });
 
     const [priceInput, setPriceInput] = useState(sub.price?.toString() || "");
@@ -46,6 +47,7 @@ function EditSubscriptionForm(props) {
             category: sub.category || "",
             priority: sub.priority || "Medium",
             color: toHex(sub.color),
+            imgUrl: sub.imgUrl || "",
         });
         setPriceInput(sub.price?.toString() || "");
     }, [props.selectedSubscription]);
@@ -179,6 +181,28 @@ function EditSubscriptionForm(props) {
                                     onChange={(color) => setFormData((prev) => ({ ...prev, color }))}
                                 />
                             </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Image URL</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="imgUrl"
+                                    placeholder="https://..."
+                                    value={formData.imgUrl}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                            {formData.imgUrl && (
+                                <div className="img-url-preview">
+                                    <img
+                                        src={formData.imgUrl}
+                                        alt="Preview"
+                                        onError={(e) => { e.target.style.display = "none"; }}
+                                        onLoad={(e) => { e.target.style.display = "block"; }}
+                                    />
+                                </div>
+                            )}
                         </Col>
                     </Row>
 

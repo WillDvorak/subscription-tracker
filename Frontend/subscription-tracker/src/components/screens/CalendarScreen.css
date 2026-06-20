@@ -1,0 +1,131 @@
+.calendar-eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.calendar-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0.25rem 0 1.25rem;
+    color: var(--text-primary);
+}
+
+/* Month navigation */
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.calendar-nav-btn {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.calendar-nav-btn:hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-strong);
+}
+
+.calendar-month-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 160px;
+    text-align: center;
+}
+
+/* Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-top: 1px solid var(--border-subtle);
+    border-left: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.calendar-day-header {
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: center;
+    padding: 0.5rem 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: monospace;
+    color: var(--text-muted);
+}
+
+.calendar-cell {
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.5rem;
+    min-height: 90px;
+    vertical-align: top;
+    transition: background-color 0.15s ease;
+}
+
+.calendar-cell:hover {
+    background-color: var(--bg-card-hover);
+}
+
+.calendar-cell--empty {
+    background-color: var(--bg-sidebar);
+    min-height: 90px;
+}
+
+.calendar-cell--today .calendar-cell-number {
+    background-color: var(--accent);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-cell-number {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+/* Subscription dots */
+.calendar-cell-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin-top: 0.35rem;
+}
+
+.calendar-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
