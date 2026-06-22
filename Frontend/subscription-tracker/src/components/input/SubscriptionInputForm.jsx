@@ -42,10 +42,6 @@ export default function SubscriptionInputForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const renewDateArr = formData.renewDate.split("-");
-
-
-        console.log("Submitting form with data:", formData);
 
         props.setSubscriptions((prev) => [
             ...prev,
@@ -54,6 +50,9 @@ export default function SubscriptionInputForm(props) {
                 title: formData.title,
                 renewCycle: formData.renewCycle,
                 renewDate: formData.renewDate,
+                nextRenewalDate: formData.renewDate,
+                lastRenewalDate: null,
+                active: true,
                 price: parseFloat(priceInput).toFixed(2),
                 color: formData.color,
                 priority: formData.priority,

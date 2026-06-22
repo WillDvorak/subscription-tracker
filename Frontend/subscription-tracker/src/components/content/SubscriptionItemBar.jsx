@@ -98,7 +98,7 @@ function SubscriptionItemBar(props) {
 
                 <div className="sub-item-col">
                     <div className="sub-item-col-label">Next Payment</div>
-                    <div className="sub-item-col-content">{formatRenewDate(nextRenewalDate)}</div>
+                    <div className="sub-item-col-content">{formatRenewDate(nextRenewalDate || renewDate)}</div>
                     <div className="sub-item-col-subcontent">{renewDate.split("-")[0]}</div>
                 </div>
 

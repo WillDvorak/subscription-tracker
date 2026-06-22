@@ -47,13 +47,20 @@ export default function SubscriptionList(props) {
     );
     const annualProjection = monthlyBurn * 12;
 
-    const now = new Date();
+    // Compare calendar dates only (no time-of-day, no timezone drift) so a
+    // renewal dated "today" always counts as renewing soon, never "1 day ago".
+    function daysUntil(dateStr) {
+        if (!dateStr) return null;
+        const [y, m, d] = dateStr.split("-").map(Number);
+        const target = Date.UTC(y, m - 1, d);
+        const now = new Date();
+        const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+        return Math.round((target - todayUTC) / (1000 * 60 * 60 * 24));
+    }
+
     const renewingSoon = subscriptions.filter((sub) => {
-        if (!sub.renewDate) return false;
-        const renewDate = new Date(sub.renewDate);
-        const diffMs = renewDate - now;
-        const diffHours = diffMs / (1000 * 60 * 60);
-        return diffHours >= 0 && diffHours <= 48;
+        const days = daysUntil(sub.renewDate);
+        return days !== null && days >= 0 && days <= 2;
     }).length;
 
     return (
