@@ -105,10 +105,10 @@ export default function SpendingScreen() {
     return (
         <Container fluid>
             {/* Header */}
-            <div className="spending-header">
-                <div className="spending-eyebrow">Financial Overview</div>
+            <div className="page-header">
+                <div className="page-eyebrow">Financial Overview</div>
                 <div className="spending-title-row">
-                    <h1 className="spending-title">Spending Analysis</h1>
+                    <h1 className="page-title">Spending Analysis</h1>
                     <div className="spending-burn">
                         <div className="spending-burn-label">Monthly Burn</div>
                         <div className="spending-burn-value">

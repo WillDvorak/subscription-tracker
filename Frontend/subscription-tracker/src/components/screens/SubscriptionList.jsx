@@ -40,8 +40,9 @@ export default function SubscriptionList(props) {
     const [activeFilter, setActiveFilter] = useState("all"); // "all" | "active" | "inactive"
     const [search, setSearch] = useState("");
 
-    const totalTracked = subscriptions.length;
-    const monthlyBurn = subscriptions.reduce(
+    const activeSubs = subscriptions.filter((sub) => sub.active !== false);
+    const totalTracked = activeSubs.length;
+    const monthlyBurn = activeSubs.reduce(
         (sum, sub) => sum + toMonthly(sub.price, sub.renewCycle || sub.renewCycleTime),
         0
     );
@@ -58,17 +59,17 @@ export default function SubscriptionList(props) {
         return Math.round((target - todayUTC) / (1000 * 60 * 60 * 24));
     }
 
-    const renewingSoon = subscriptions.filter((sub) => {
+    const renewingSoon = activeSubs.filter((sub) => {
         const days = daysUntil(sub.renewDate);
         return days !== null && days >= 0 && days <= 2;
     }).length;
 
     return (
         <Container fluid>
-            <div className="sub-list-header">
-                <div className="sub-list-eyebrow">Portfolio Overview</div>
+            <div className="page-header">
+                <div className="page-eyebrow">Portfolio Overview</div>
                 <div className="sub-list-title-row">
-                    <h1 className="sub-list-title">Subscriptions</h1>
+                    <h1 className="page-title">Subscriptions</h1>
                     <div className="sub-list-burn">
                         <div className="sub-list-burn-label">Monthly Burn</div>
                         <div className="sub-list-burn-value">${monthlyBurn.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>

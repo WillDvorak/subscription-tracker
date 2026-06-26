@@ -63,9 +63,9 @@ export default function Home() {
     return (
         <Container fluid>
             {/* Header */}
-            <div className="home-header">
-                <div className="home-eyebrow">{today}</div>
-                <h1 className="home-title">Dashboard</h1>
+            <div className="page-header">
+                <div className="page-eyebrow">{today}</div>
+                <h1 className="page-title">Dashboard</h1>
                 <p className="home-desc">Your subscription overview at a glance.</p>
             </div>
 

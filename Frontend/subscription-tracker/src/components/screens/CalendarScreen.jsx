@@ -1,6 +1,6 @@
 import { useState, useContext, useMemo } from 'react';
 import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
-import { Modal } from 'react-bootstrap';
+import { Modal, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { SubscriptionDataContext } from '../contexts/SubscriptionDataContext';
 import "./CalendarScreen.css";
@@ -84,17 +84,32 @@ export default function CalendarScreen() {
         return map;
     }, [subscriptions, year, month, daysInMonth]);
 
-    const { monthTotal, monthCount } = useMemo(() => {
-        let total = 0;
-        let count = 0;
-        Object.values(occurrencesByDay).forEach((subs) => {
+    const { monthTotal, monthCount, renewedTotal, renewedCount, remainingTotal, remainingCount } = useMemo(() => {
+        let monthTotal = 0, monthCount = 0;
+        let renewedTotal = 0, renewedCount = 0;
+        let remainingTotal = 0, remainingCount = 0;
+
+        const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        Object.entries(occurrencesByDay).forEach(([day, subs]) => {
+            const cellDate = new Date(year, month, Number(day));
+            const isPast = cellDate < todayMidnight;
             subs.forEach((sub) => {
-                total += parseFloat(sub.price) || 0;
-                count += 1;
+                const price = parseFloat(sub.price) || 0;
+                monthTotal += price;
+                monthCount += 1;
+                if (isPast) {
+                    renewedTotal += price;
+                    renewedCount += 1;
+                } else {
+                    remainingTotal += price;
+                    remainingCount += 1;
+                }
             });
         });
-        return { monthTotal: total, monthCount: count };
-    }, [occurrencesByDay]);
+
+        return { monthTotal, monthCount, renewedTotal, renewedCount, remainingTotal, remainingCount };
+    }, [occurrencesByDay, year, month]);
 
     const isToday = (day) =>
         day === today.getDate() &&
@@ -121,9 +136,12 @@ export default function CalendarScreen() {
         : "";
 
     return (
-        <>
-            <div className="calendar-eyebrow">Track your payments</div>
-            <div className="calendar-title">Calendar</div>
+        <Container fluid>
+            <div className="page-header">
+              <div className="page-eyebrow">Track your payments</div>
+              <h1 className="page-title">Calendar</h1>
+              <p className="page-desc">Visualize your upcoming renewals.</p>
+            </div>
 
             {/* Month nav */}
             <div className="calendar-nav">
@@ -135,13 +153,28 @@ export default function CalendarScreen() {
                     <ArrowRight />
                 </button>
 
-                <div className="calendar-month-summary">
-                    <span className="calendar-month-summary-value">
-                        ${monthTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
-                    <span className="calendar-month-summary-label">
-                        across {monthCount} {monthCount === 1 ? "renewal" : "renewals"} this month
-                    </span>
+                <div className="calendar-stats">
+                    <div className="calendar-stat-card">
+                        <div className="calendar-stat-label">Renewed</div>
+                        <div className="calendar-stat-value">
+                            ${renewedTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                        <div className="calendar-stat-sub">{renewedCount} {renewedCount === 1 ? "payment" : "payments"}</div>
+                    </div>
+                    <div className="calendar-stat-card">
+                        <div className="calendar-stat-label">Remaining</div>
+                        <div className="calendar-stat-value">
+                            ${remainingTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                        <div className="calendar-stat-sub">{remainingCount} {remainingCount === 1 ? "payment" : "payments"}</div>
+                    </div>
+                    <div className="calendar-stat-card">
+                        <div className="calendar-stat-label">Total This Month</div>
+                        <div className="calendar-stat-value">
+                            ${monthTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                        <div className="calendar-stat-sub">{monthCount} {monthCount === 1 ? "payment" : "payments"}</div>
+                    </div>
                 </div>
             </div>
 
@@ -220,6 +253,6 @@ export default function CalendarScreen() {
                     </div>
                 </Modal.Body>
             </Modal>
-        </>
+        </Container>
     );
 }
