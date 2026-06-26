@@ -53,15 +53,11 @@ function buildChartData(subscriptions, mode = "monthly") {
 
 const chartOptions = {
     cutout: "68%",
+    maintainAspectRatio: false,
     plugins: {
-        legend: {
-            labels: {
-                color: "#9898b0",
-                font: { family: "monospace", size: 11 },
-                boxWidth: 12,
-                padding: 16,
-            },
-        },
+        // Legend is rendered as plain HTML below instead (see spending-chart-legend),
+        // so an arbitrary number of categories never resizes/shifts the canvas itself.
+        legend: { display: false },
         tooltip: {
             callbacks: {
                 label: (ctx) => `  $${ctx.raw.toFixed(2)}`,
@@ -69,6 +65,15 @@ const chartOptions = {
         },
     },
 };
+
+// Pulls {label, color} pairs out of a chart.js dataset so we can render
+// our own legend markup instead of relying on the in-canvas legend plugin.
+function getLegendItems(chartData) {
+    return chartData.labels.map((label, i) => ({
+        label,
+        color: chartData.datasets[0].borderColor[i],
+    }));
+}
 
 export default function SpendingScreen() {
     const [subscriptions] = useContext(SubscriptionDataContext);
@@ -100,10 +105,10 @@ export default function SpendingScreen() {
     return (
         <Container fluid>
             {/* Header */}
-            <div className="spending-header">
-                <div className="spending-eyebrow">Financial Overview</div>
+            <div className="page-header">
+                <div className="page-eyebrow">Financial Overview</div>
                 <div className="spending-title-row">
-                    <h1 className="spending-title">Spending Analysis</h1>
+                    <h1 className="page-title">Spending Analysis</h1>
                     <div className="spending-burn">
                         <div className="spending-burn-label">Monthly Burn</div>
                         <div className="spending-burn-value">
@@ -145,6 +150,14 @@ export default function SpendingScreen() {
                 <Col md={6}>
                     <div className="spending-chart-card">
                         <div className="spending-chart-title">Monthly</div>
+                        <div className="spending-chart-legend">
+                            {getLegendItems(monthlyCategoryChartData).map((item) => (
+                                <div className="spending-legend-item" key={item.label}>
+                                    <span className="spending-legend-swatch" style={{ "--legend-color": item.color }} />
+                                    {item.label}
+                                </div>
+                            ))}
+                        </div>
                         <div className="spending-chart-wrap">
                             <Doughnut data={monthlyCategoryChartData} options={chartOptions} />
                             <div className="spending-chart-center">
@@ -159,6 +172,14 @@ export default function SpendingScreen() {
                 <Col md={6}>
                     <div className="spending-chart-card">
                         <div className="spending-chart-title">Annual</div>
+                        <div className="spending-chart-legend">
+                            {getLegendItems(yearlyCategoryChartData).map((item) => (
+                                <div className="spending-legend-item" key={item.label}>
+                                    <span className="spending-legend-swatch" style={{ "--legend-color": item.color }} />
+                                    {item.label}
+                                </div>
+                            ))}
+                        </div>
                         <div className="spending-chart-wrap">
                             <Doughnut data={yearlyCategoryChartData} options={chartOptions} />
                             <div className="spending-chart-center">
