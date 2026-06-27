@@ -177,6 +177,21 @@
     letter-spacing: 0.1em;
 }
 
+/* Sortable table headers */
+.sortable-th {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable-th:hover {
+    background-color: var(--bg-card-hover) !important;
+}
+
+.sort-arrow {
+    font-size: 0.6rem;
+    color: var(--accent);
+}
+
 /* Dark tables */
 .spending-table {
     width: 100%;
@@ -187,6 +202,7 @@
     border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 0;
+    table-layout: fixed;
 }
 
 .spending-table th {

@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
 import { Modal, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
@@ -24,7 +24,7 @@ function getOccurrenceDaysInMonth(sub, year, month, daysInMonth) {
         for (let d = 1; d <= daysInMonth; d++) {
             const cur = Date.UTC(year, month, d);
             const diffDays = Math.round((cur - anchorUTC) / 86400000);
-            if (diffDays >= 0 && diffDays % 7 === 0) days.push(d);
+            if (diffDays % 7 === 0) days.push(d);
         }
         return days;
     }
@@ -38,7 +38,7 @@ function getOccurrenceDaysInMonth(sub, year, month, daysInMonth) {
     const anchorTotalMonths = ay * 12 + anchorMonth;
     const targetTotalMonths = year * 12 + month;
     const diff = targetTotalMonths - anchorTotalMonths;
-    if (diff < 0 || diff % step !== 0) return [];
+    if (diff % step !== 0) return [];
     return [Math.min(anchorDay, daysInMonth)];
 }
 
@@ -50,6 +50,20 @@ export default function CalendarScreen() {
     const [month, setMonth] = useState(new Date().getMonth());
     const [year, setYear] = useState(new Date().getFullYear());
     const [selectedDay, setSelectedDay] = useState(null);
+    const [showPicker, setShowPicker] = useState(false);
+    const pickerRef = useRef(null);
+
+    // Close the month/year picker when clicking outside of it
+    useEffect(() => {
+        if (!showPicker) return;
+        function handleClickOutside(e) {
+            if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+                setShowPicker(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [showPicker]);
 
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -148,7 +162,43 @@ export default function CalendarScreen() {
                 <button className="calendar-nav-btn" onClick={prevMonth}>
                     <ArrowLeft />
                 </button>
-                <span className="calendar-month-label">{monthName} {year}</span>
+
+                <div className="calendar-month-picker-wrap" ref={pickerRef}>
+                    <button
+                        type="button"
+                        className={`calendar-month-label calendar-month-label--btn ${showPicker ? "calendar-month-label--open" : ""}`}
+                        onClick={() => setShowPicker(p => !p)}
+                    >
+                        {monthName} {year}
+                    </button>
+
+                    {showPicker && (
+                        <div className="calendar-month-picker">
+                            <select
+                                className="calendar-picker-select"
+                                value={month}
+                                onChange={(e) => setMonth(Number(e.target.value))}
+                            >
+                                {Array.from({ length: 12 }, (_, i) => (
+                                    <option key={i} value={i}>
+                                        {new Date(2000, i, 1).toLocaleString("en-US", { month: "long" })}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
+                                className="calendar-picker-select"
+                                value={year}
+                                onChange={(e) => setYear(Number(e.target.value))}
+                            >
+                                {Array.from({ length: 8 }, (_, i) => {
+                                    const y = new Date().getFullYear() - 5 + i;
+                                    return <option key={y} value={y}>{y}</option>;
+                                })}
+                            </select>
+                        </div>
+                    )}
+                </div>
+
                 <button className="calendar-nav-btn" onClick={nextMonth}>
                     <ArrowRight />
                 </button>
