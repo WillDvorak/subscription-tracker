@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink, useNavigate } from "react-router";
 import { HouseDoor, ColumnsGap, CalendarEvent, GraphUp, GearFill, PlusCircle, BoxArrowInRight, BoxArrowLeft } from "react-bootstrap-icons";
 import "./Layout.css";
 
@@ -8,6 +8,8 @@ import { AuthContext } from "../contexts/AuthContext";
 export default function Layout() {
 
     const [token, setToken] = useContext(AuthContext);
+    const navigate = useNavigate();
+    
 
     function handleLogout() {
         setToken(null);
@@ -40,7 +42,7 @@ export default function Layout() {
                 </nav>
 
                 <div className="sidebar-footer">
-                    <button className="add-sub-btn">
+                    <button className="add-sub-btn" onClick={() => navigate("/subscriptions", { state: { openAdd: true } })}>
                         <PlusCircle className="nav-icon"/> Add Subscription
                     </button>
                     <div className="sidebar-footer-links">
@@ -49,11 +51,11 @@ export default function Layout() {
                         </NavLink>
                         {token ? (
                             <button className="nav-link-item logout-btn" onClick={handleLogout}>
-                                <BoxArrowLeft className="nav-icon"/>Logout
+                                <BoxArrowLeft className="nav-icon"/>Sign Out
                             </button>
                         ) : (
                             <NavLink to="/login" className="nav-link-item">
-                               <BoxArrowInRight className="nav-icon"/>Login
+                               <BoxArrowInRight className="nav-icon"/>Sign In
                             </NavLink>
                         )}
                     </div>

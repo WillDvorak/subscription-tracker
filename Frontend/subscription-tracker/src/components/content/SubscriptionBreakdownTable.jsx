@@ -1,6 +1,62 @@
+import { useState } from "react";
+
 import "../screens/SpendingScreen.css";
 
 export default function SubscriptionBreakdownTable({ subscriptions, getMonthlyCost }) {
+
+    const [sortField, setSortField] = useState("title");
+    const [sortDir, setSortDir] = useState("asc"); // "asc" | "desc"
+    const COLUMNS = [
+    { label: "Title",          field: "title"      },
+    { label: "Category",       field: "category"   },
+    { label: "Priority",       field: "priority"   },
+    { label: "Price",          field: "price"      },
+    { label: "Cycle",          field: "renewCycle" },
+    { label: "Next Renewal",   field: "renewDate"  },
+    { label: "Monthly (Est.)", field: "monthly"    },
+    { label: "Yearly (Est.)",  field: "yearly"     },
+    ];
+
+    function handleSort(field) {
+        if (field === sortField) {
+            setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+        } else {
+            setSortField(field);
+            setSortDir("asc");
+        }
+    }
+
+    function arrow(field) {
+        if (sortField !== field) return null;
+        return <span className="sort-arrow">{sortDir === "asc" ? " ▲" : " ▼"}</span>;
+    }
+
+    const sortedSubs = subscriptions.slice().sort((a, b) => {
+        let valA, valB;
+
+        switch (sortField) {
+            case "price":
+                valA = parseFloat(a.price) || 0;
+                valB = parseFloat(b.price) || 0;
+                break;
+            case "monthly":
+                valA = getMonthlyCost(a);
+                valB = getMonthlyCost(b);
+                break;
+            case "renewDate":
+                valA = a.renewDate || "";
+                valB = b.renewDate || "";
+                break; // "YYYY-MM-DD" strings sort correctly with plain string comparison
+            default: // title, category, priority, cycle — plain strings
+                valA = (a[sortField] || "").toLowerCase();
+                valB = (b[sortField] || "").toLowerCase();
+        }
+
+        if (valA < valB) return sortDir === "asc" ? -1 : 1;
+        if (valA > valB) return sortDir === "asc" ? 1 : -1;
+        return 0;
+    });
+
     if (subscriptions.length === 0) {
         return (
             <div className="spending-table-wrap">
@@ -16,18 +72,15 @@ export default function SubscriptionBreakdownTable({ subscriptions, getMonthlyCo
             <table className="spending-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Priority</th>
-                        <th>Price</th>
-                        <th>Cycle</th>
-                        <th>Next Renewal</th>
-                        <th>Monthly (est.)</th>
-                        <th>Yearly (est.)</th>
+                        {COLUMNS.map(({ label, field }) => (
+                            <th key={field} className="sortable-th" onClick={() => handleSort(field)}>
+                                {label}{arrow(field)}
+                            </th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
-                    {subscriptions.map((sub) => {
+                    {sortedSubs.map((sub) => {
                         const monthly = getMonthlyCost(sub);
                         const yearly = monthly * 12;
                         const price = parseFloat(sub.price);

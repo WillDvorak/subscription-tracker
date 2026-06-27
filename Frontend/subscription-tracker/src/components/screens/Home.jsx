@@ -30,24 +30,25 @@ function daysUntil(dateStr) {
 
 export default function Home() {
     const [subscriptions] = useContext(SubscriptionDataContext);
+    const activeSubs = subscriptions.filter((sub) => sub.active !== false);
     const navigate = useNavigate();
 
-    const monthlyBurn = subscriptions.reduce(
+    const monthlyBurn = activeSubs.reduce(
         (sum, sub) => sum + getMonthlyCost(sub), 0
     );
     const annualProjection = monthlyBurn * 12;
 
-    const renewingSoon = subscriptions
+    const renewingSoon = activeSubs
         .map((sub) => ({ ...sub, days: daysUntil(sub.renewDate) }))
         .filter((sub) => sub.days !== null && sub.days >= 0 && sub.days <= 7)
         .sort((a, b) => a.days - b.days);
 
-    const recentlyRenewed = subscriptions
+    const recentlyRenewed = activeSubs
         .map((sub) => ({ ...sub, days: daysUntil(sub.renewDate) }))
         .filter((sub) => sub.days !== null && sub.days < 0 && sub.days >= -7)
         .sort((a, b) => b.days - a.days);
 
-    const categoryTotals = subscriptions.reduce((acc, sub) => {
+    const categoryTotals = activeSubs.reduce((acc, sub) => {
         const cat = (sub.category && sub.category.trim()) || "Uncategorized";
         acc[cat] = (acc[cat] || 0) + getMonthlyCost(sub);
         return acc;
@@ -80,7 +81,7 @@ export default function Home() {
                 <div className="home-stat-card" onClick={() => navigate("/subscriptions")} role="button">
                     <div className="home-stat-label">Tracked</div>
                     <div className="home-stat-value">
-                        {subscriptions.length}
+                        {activeSubs.length}
                         <span className="home-stat-suffix">subscriptions</span>
                     </div>
                 </div>

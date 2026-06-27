@@ -1,5 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Button, Modal } from "react-bootstrap";
+import { useLocation } from "react-router";
 import { PlusCircle } from "react-bootstrap-icons";
 import SubscriptionItemBar from "../content/SubscriptionItemBar.jsx";
 import SubscriptionInputForm from "../input/SubscriptionInputForm.jsx";
@@ -40,6 +41,17 @@ export default function SubscriptionList(props) {
     const [activeFilter, setActiveFilter] = useState("all"); // "all" | "active" | "inactive"
     const [search, setSearch] = useState("");
 
+    const location = useLocation();
+
+    useEffect(() => {
+        console.log("location state:", location.state);
+        if (location.state?.openAdd) {
+            setShowAddForm(true);
+            // Clear the state so hitting back doesn't re-open it
+            window.history.replaceState({}, "");
+        }
+    }, [location.state]);
+
     const activeSubs = subscriptions.filter((sub) => sub.active !== false);
     const totalTracked = activeSubs.length;
     const monthlyBurn = activeSubs.reduce(
@@ -63,6 +75,8 @@ export default function SubscriptionList(props) {
         const days = daysUntil(sub.renewDate);
         return days !== null && days >= 0 && days <= 2;
     }).length;
+
+    
 
     return (
         <Container fluid>
