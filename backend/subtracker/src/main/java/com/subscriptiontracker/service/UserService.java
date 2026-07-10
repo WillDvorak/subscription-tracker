@@ -25,7 +25,6 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Email is already taken by another account.");
         }
-        user.setUsername(req.getUsername());
         user.setEmail(req.getEmail());
         return toResponse(userRepository.save(user));
     }
@@ -45,7 +44,6 @@ public class UserService {
     private UserDTO.Response toResponse(User user) {
         UserDTO.Response res = new UserDTO.Response();
         res.setId(user.getId());
-        res.setUsername(user.getUsername());
         res.setEmail(user.getEmail());
         res.setCreatedAt(user.getCreatedAt());
         return res;
