@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import "./SettingsScreen.css";
 
-const SECTIONS = ["General", "Account", "Notifications", "Help"];
+const SECTIONS = ["General", "Account"]; 
+// Add "Notifications" and "Help" at some point.
 
 function SettingsRow({ label, description, children }) {
     return (
@@ -53,12 +54,6 @@ export default function SettingsScreen() {
     // as the default value there instead.
     const [defaultCycle, setDefaultCycle] = useState("Monthly");
 
-    // Account
-    // TODO: Display Name — currently hardcoded. Should be loaded from the backend user profile
-    // (GET /api/user) on mount and saved back (PATCH /api/user) on change. Home.jsx could
-    // greet the user by name once this is wired up.
-    const [displayName, setDisplayName] = useState("Will");
-
     // TODO: Email — same as display name, should come from the backend user profile.
     // Changing it requires re-verification flow on the backend.
     const [email, setEmail] = useState("");
@@ -81,9 +76,9 @@ export default function SettingsScreen() {
 
     return (
         <Container fluid>
-            <div className="settings-header">
-                <div className="settings-eyebrow">Preferences</div>
-                <h1 className="settings-title">Settings</h1>
+            <div className="page-header">
+                <div className="page-eyebrow">Preferences</div>
+                <h1 className="page-title">Settings</h1>
                 <p className="settings-desc">Manage your account, preferences, and notifications.</p>
             </div>
 
@@ -167,22 +162,8 @@ export default function SettingsScreen() {
                         <div className="settings-card">
                             <div className="settings-card-title">Account</div>
 
-                            <SettingsRow label="Display Name" description="Shown on your dashboard.">
-                                <input
-                                    className="settings-input"
-                                    type="text"
-                                    value={displayName}
-                                    onChange={(e) => setDisplayName(e.target.value)}
-                                />
-                            </SettingsRow>
-
-                            <SettingsRow label="Email Address" description="Used for login and notifications.">
-                                <input
-                                    className="settings-input"
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
+                            <SettingsRow label="Email" description="Change your account email.">
+                                <button className="settings-btn-secondary">Change Email</button>
                             </SettingsRow>
 
                             <SettingsRow label="Password" description="Change your account password.">
@@ -197,7 +178,7 @@ export default function SettingsScreen() {
                         </div>
                     )}
 
-                    {activeSection === "Notifications" && (
+                    {/* {activeSection === "Notifications" && (
                         <div className="settings-card">
                             <div className="settings-card-title">Notifications</div>
 
@@ -224,7 +205,7 @@ export default function SettingsScreen() {
                                 <SettingsToggle checked={weeklyDigest} onChange={setWeeklyDigest} />
                             </SettingsRow>
                         </div>
-                    )}
+                    )} */}
                 </Col>
             </Row>
         </Container>

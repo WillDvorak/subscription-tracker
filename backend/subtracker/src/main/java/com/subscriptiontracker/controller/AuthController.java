@@ -32,7 +32,6 @@ public class AuthController {
         }
 
         User user = new User();
-        user.setUsername(req.getUsername());
         user.setEmail(req.getEmail());
         user.setPassword(passwordEncoder.encode(req.getPassword()));
 
@@ -42,7 +41,6 @@ public class AuthController {
         AuthDTO.AuthResponse res = new AuthDTO.AuthResponse();
         res.setToken(token);
         res.setUserId(saved.getId());
-        res.setUsername(saved.getUsername());
         res.setEmail(saved.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
@@ -66,7 +64,6 @@ public class AuthController {
         AuthDTO.AuthResponse res = new AuthDTO.AuthResponse();
         res.setToken(token);
         res.setUserId(user.getId());
-        res.setUsername(user.getUsername());
         res.setEmail(user.getEmail());
 
         return ResponseEntity.ok(res);

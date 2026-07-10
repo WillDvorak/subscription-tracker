@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { SubscriptionDataContext } from "../contexts/SubscriptionDataContext";
+import { getNextRenewalDate, getLastRenewalDate, daysUntil } from "../../utils/subscriptionUtils";
 import "./Home.css";
 
 function getMonthlyCost(sub) {
@@ -17,17 +18,6 @@ function getMonthlyCost(sub) {
     }
 }
 
-function daysUntil(dateStr) {
-    if (!dateStr) return null;
-    // Compare calendar dates only (no time-of-day, no timezone drift) so a
-    // renewal dated "today" always computes to exactly 0, never -1 or 1.
-    const [y, m, d] = dateStr.split("-").map(Number);
-    const target = Date.UTC(y, m - 1, d);
-    const now = new Date();
-    const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.round((target - todayUTC) / (1000 * 60 * 60 * 24));
-}
-
 export default function Home() {
     const [subscriptions] = useContext(SubscriptionDataContext);
     const activeSubs = subscriptions.filter((sub) => sub.active !== false);
@@ -39,12 +29,12 @@ export default function Home() {
     const annualProjection = monthlyBurn * 12;
 
     const renewingSoon = activeSubs
-        .map((sub) => ({ ...sub, days: daysUntil(sub.renewDate) }))
+        .map((sub) => ({ ...sub, days: daysUntil(getNextRenewalDate(sub.renewDate, sub.renewCycle)) }))
         .filter((sub) => sub.days !== null && sub.days >= 0 && sub.days <= 7)
         .sort((a, b) => a.days - b.days);
 
     const recentlyRenewed = activeSubs
-        .map((sub) => ({ ...sub, days: daysUntil(sub.renewDate) }))
+        .map((sub) => ({ ...sub, days: daysUntil(getLastRenewalDate(sub.renewDate, sub.renewCycle)) }))
         .filter((sub) => sub.days !== null && sub.days < 0 && sub.days >= -7)
         .sort((a, b) => b.days - a.days);
 

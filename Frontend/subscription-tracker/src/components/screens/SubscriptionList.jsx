@@ -8,6 +8,7 @@ import EditSubscriptionForm from "../input/EditSubscriptionForm.jsx";
 import "./SubscriptionList.css";
 
 import { SubscriptionDataContext } from "../contexts/SubscriptionDataContext.js";
+import { getNextRenewalDate, daysUntil } from "../../utils/subscriptionUtils";
 
 // Convert a price to its monthly equivalent based on renewal cycle
 function toMonthly(price, renewCycle) {
@@ -60,19 +61,8 @@ export default function SubscriptionList(props) {
     );
     const annualProjection = monthlyBurn * 12;
 
-    // Compare calendar dates only (no time-of-day, no timezone drift) so a
-    // renewal dated "today" always counts as renewing soon, never "1 day ago".
-    function daysUntil(dateStr) {
-        if (!dateStr) return null;
-        const [y, m, d] = dateStr.split("-").map(Number);
-        const target = Date.UTC(y, m - 1, d);
-        const now = new Date();
-        const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-        return Math.round((target - todayUTC) / (1000 * 60 * 60 * 24));
-    }
-
     const renewingSoon = activeSubs.filter((sub) => {
-        const days = daysUntil(sub.renewDate);
+        const days = daysUntil(getNextRenewalDate(sub.renewDate, sub.renewCycle));
         return days !== null && days >= 0 && days <= 2;
     }).length;
 
