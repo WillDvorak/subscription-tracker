@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+
 import java.time.LocalDateTime;
 
 public class UserDTO {
@@ -11,9 +12,6 @@ public class UserDTO {
     /** Request body for creating / updating a user */
     @Data
     public static class Request {
-        @NotBlank(message = "Username is required")
-        private String username;
-
         @Email(message = "Must be a valid email")
         @NotBlank(message = "Email is required")
         private String email;
@@ -23,7 +21,6 @@ public class UserDTO {
     @Data
     public static class Response {
         private Long id;
-        private String username;
         private String email;
         private LocalDateTime createdAt;
     }
