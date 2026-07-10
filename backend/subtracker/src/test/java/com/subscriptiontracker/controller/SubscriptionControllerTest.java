@@ -37,7 +37,6 @@ class SubscriptionControllerTest {
     @BeforeEach
     void registerAndLogin() throws Exception {
         AuthDTO.RegisterRequest req = new AuthDTO.RegisterRequest();
-        req.setUsername("testuser");
         req.setEmail("testuser-" + UUID.randomUUID() + "@example.com");
         req.setPassword("password123");
 
