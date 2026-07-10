@@ -1,4 +1,5 @@
 import { memo, useState } from "react";
+import { getNextRenewalDate } from "../../utils/subscriptionUtils";
 import "./SubscriptionItemBar.css";
 
 /**
@@ -98,7 +99,7 @@ function SubscriptionItemBar(props) {
 
                 <div className="sub-item-col">
                     <div className="sub-item-col-label">Next Payment</div>
-                    <div className="sub-item-col-content">{formatRenewDate(nextRenewalDate || renewDate)}</div>
+                    <div className="sub-item-col-content">{formatRenewDate(getNextRenewalDate(renewDate, renewCycle) || renewDate)}</div>
                     <div className="sub-item-col-subcontent">{renewDate.split("-")[0]}</div>
                 </div>
 

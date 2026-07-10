@@ -184,6 +184,7 @@
     border-radius: var(--radius);
     overflow: hidden;
     min-height: 680px;
+    gap: 4px;
 }
 
 .calendar-day-header {
@@ -194,6 +195,7 @@
     padding: 0.5rem 0;
     font-size: 0.72rem;
     font-weight: 700;
+    max-width: 160px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-family: monospace;
@@ -206,6 +208,7 @@
     border-bottom: 1px solid var(--border-subtle);
     padding: 0.5rem;
     min-height: 130px;
+    max-width: 160px;
     vertical-align: top;
     transition: background-color 0.15s ease;
 }

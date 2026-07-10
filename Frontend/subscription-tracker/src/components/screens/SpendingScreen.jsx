@@ -75,6 +75,8 @@ function getLegendItems(chartData) {
     }));
 }
 
+
+
 export default function SpendingScreen() {
     const [subscriptions] = useContext(SubscriptionDataContext);
 
@@ -194,14 +196,15 @@ export default function SpendingScreen() {
             </Row>
 
             {/* Tables */}
-            <div className="spending-section-label">Category Breakdown</div>
-            <CategoryTotalsTable categoryEntries={categoryEntries} />
-
             <div className="spending-section-label">Subscription Breakdown</div>
             <SubscriptionBreakdownTable
                 subscriptions={subscriptions}
                 getMonthlyCost={getMonthlyCost}
             />
+            
+            <div className="spending-section-label">Category Breakdown</div>
+            <CategoryTotalsTable categoryEntries={categoryEntries} />
+
         </Container>
     );
 }

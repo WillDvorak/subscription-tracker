@@ -1,9 +1,8 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
+import { apiFetch } from "../../api/api";
 import "../screens/LoginAndRegisterScreen.css";
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 /**
  * Handles both login and register in one form.
@@ -43,23 +42,7 @@ export default function LoginAndRegisterForm({ isLoggingIn, setIsLoggingIn }) {
         setLoading(true);
         try {
             const endpoint = isLoggingIn ? "/api/auth/login" : "/api/auth/register";
-            const body = isLoggingIn
-                ? { email, password }
-                : { email, password };
-
-            const res = await fetch(`${BASE_URL}${endpoint}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
-            });
-
-            if (!res.ok) {
-                // Try to read an error message from the backend response body
-                const data = await res.json().catch(() => ({}));
-                throw new Error(data.message || "Something went wrong.");
-            }
-
-            const data = await res.json();
+            const data = await apiFetch(endpoint, { method: "POST", body: { email, password } });
             setToken(data.token); // triggers the App.jsx effect that swaps to API data
             navigate("/");
         } catch (err) {

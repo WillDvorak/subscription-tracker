@@ -10,9 +10,6 @@ public class AuthDTO {
     @Getter
     @Setter
     public static class RegisterRequest {
-        @NotBlank
-        private String username;
-
         @Email
         @NotBlank
         private String email;
@@ -37,7 +34,6 @@ public class AuthDTO {
     public static class AuthResponse {
         private String token;
         private Long userId;
-        private String username;
         private String email;
     }
 }

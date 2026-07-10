@@ -1,6 +1,6 @@
-import { HashRouter, Route, Routes, Link } from 'react-router';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { useState, useContext, useEffect, useRef } from 'react';
+import { HashRouter, Route, Routes } from 'react-router';
+import { useState, useEffect, useRef } from 'react';
+import { apiFetch } from './api/api';
 
 import './App.css';
 
@@ -84,17 +84,21 @@ function App() {
     }
   }, [subscriptions, token]);
 
-  // Swap data source when the user logs in or out.
-  // useRef prevents this from firing on the initial mount (useState handles that).
+  // Fetch subscriptions from the API whenever we have a token.
+  // Covers both: initial load (returning user with token in localStorage)
+  // and login (token just changed from null to a value).
+  useEffect(() => {
+    if (!token) return;
+    apiFetch("/api/subscriptions", {}, token)
+      .then(setSubscriptions)
+      .catch(() => setSubscriptions([])); // token may be expired — fail gracefully
+  }, [token]);
+
+  // Swap data source when the user logs out.
   const isFirstRender = useRef(true);
   useEffect(() => {
     if (isFirstRender.current) { isFirstRender.current = false; return; }
-    if (token) {
-      // Logged in — clear guest data, ready for API response.
-      // TODO: replace setSubscriptions([]) with an API fetch once backend is wired.
-      setSubscriptions([]);
-    } else {
-      // Logged out — restore guest data from localStorage.
+    if (!token) {
       setSubscriptions(loadGuestSubs());
     }
   }, [token]);
