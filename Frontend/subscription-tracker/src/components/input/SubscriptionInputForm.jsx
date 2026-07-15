@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Form, Button, Card, Row, Col } from "react-bootstrap";
 import { HexColorPicker } from "react-colorful";
 import "./SubscriptionInputForm.css";
+import { AuthContext } from "../contexts/AuthContext";
+import { apiFetch } from "../../api/api";
 
 
 export default function SubscriptionInputForm(props) {
+
+    const [token] = useContext(AuthContext);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(null);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -40,27 +46,7 @@ export default function SubscriptionInputForm(props) {
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        props.setSubscriptions((prev) => [
-            ...prev,
-            {
-                id: Date.now(),
-                title: formData.title,
-                renewCycle: formData.renewCycle,
-                renewDate: formData.renewDate,
-                nextRenewalDate: formData.renewDate,
-                lastRenewalDate: null,
-                active: true,
-                price: parseFloat(priceInput).toFixed(2),
-                color: formData.color,
-                priority: formData.priority,
-                category: formData.category,
-                imgUrl: formData.imgUrl,
-            },
-        ]);
-
+    const resetForm = () => {
         setFormData({
             title: "",
             renewCycle: "Monthly",
@@ -72,7 +58,49 @@ export default function SubscriptionInputForm(props) {
             imgUrl: "",
         });
         setPriceInput("");
-        props.onClose?.();
+        setError(null);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setSubmitting(true);
+
+        const payload = {
+            title: formData.title,
+            renewCycle: formData.renewCycle,
+            renewDate: formData.renewDate,
+            price: parseFloat(priceInput),
+            priority: formData.priority,
+            category: formData.category,
+            color: formData.color,
+            imgUrl: formData.imgUrl,
+            active: true,
+        };
+
+        if (token) {
+            // Logged in: persist to the API and use the server's response
+            // (the server computes nextRenewalDate, lastRenewalDate, and assigns the real id)
+            try {
+                const created = await apiFetch("/api/subscriptions", { method: "POST", body: payload }, token);
+                props.setSubscriptions((prev) => [...prev, created]);
+                resetForm();
+                props.onClose?.();
+            } catch (err) {
+                setError(err.message || "Failed to add subscription.");
+            } finally {
+                setSubmitting(false);
+            }
+        } else {
+            // Guest: add locally with a temporary id
+            props.setSubscriptions((prev) => [
+                ...prev,
+                { ...payload, id: Date.now(), nextRenewalDate: formData.renewDate, lastRenewalDate: null },
+            ]);
+            resetForm();
+            props.onClose?.();
+            setSubmitting(false);
+        }
     };
 
 
@@ -221,10 +249,15 @@ export default function SubscriptionInputForm(props) {
                             )}
                         </Col>
                     </Row>
+                    {error && (
+                        <div className="mb-3" style={{ color: "var(--color-danger, #e55)", fontSize: "0.875rem" }}>
+                            {error}
+                        </div>
+                    )}
                     <Row>
                         <Col xs={12} md={6}>
-                            <Button type="submit" variant="success" style={{ width: "100%" }}>
-                                Add Subscription
+                            <Button type="submit" variant="success" style={{ width: "100%" }} disabled={submitting}>
+                                {submitting ? "Adding..." : "Add Subscription"}
                             </Button>
                         </Col>
                         <Col xs={12} md={6}>
@@ -232,18 +265,7 @@ export default function SubscriptionInputForm(props) {
                                 style={{ width: "100%" }}
                                 type="button"
                                 variant="secondary"
-                                onClick={() => {
-                                    setFormData({
-                                        title: "",
-                                        renewCycle: "",
-                                        renewDate: "",
-                                        price: 0.00,
-                                        category: "",
-                                        priority: "Medium",
-                                        color: "#ffffff"
-                                    });
-                                    setPriceInput("")
-                                }}
+                                onClick={resetForm}
                             >
                                 Clear
                             </Button>
