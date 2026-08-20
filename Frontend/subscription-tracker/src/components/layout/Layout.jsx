@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router";
 import { HouseDoor, ColumnsGap, CalendarEvent, GraphUp, GearFill, PlusCircle, BoxArrowInRight, BoxArrowLeft } from "react-bootstrap-icons";
 import "./Layout.css";
@@ -9,10 +9,12 @@ export default function Layout() {
 
     const [token, setToken] = useContext(AuthContext);
     const navigate = useNavigate();
-    
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     function handleLogout() {
         setToken(null);
+        setShowLogoutModal(false);
+        navigate("/");
     }
 
     return (
@@ -50,7 +52,7 @@ export default function Layout() {
                             <GearFill className="nav-icon"/> Settings
                         </NavLink>
                         {token ? (
-                            <button className="nav-link-item logout-btn" onClick={handleLogout}>
+                            <button className="nav-link-item logout-btn" onClick={() => setShowLogoutModal(true)}>
                                 <BoxArrowLeft className="nav-icon"/>Sign Out
                             </button>
                         ) : (
@@ -65,6 +67,23 @@ export default function Layout() {
             <main className="main-content">
                 <Outlet />
             </main>
+
+            {showLogoutModal && (
+                <div className="modal-overlay" onClick={() => setShowLogoutModal(false)}>
+                    <div className="modal-box" onClick={e => e.stopPropagation()}>
+                        <h2 className="modal-title">Sign out?</h2>
+                        <p className="modal-body">You'll need to sign back in to access your subscriptions.</p>
+                        <div className="modal-actions">
+                            <button className="modal-btn modal-btn--cancel" onClick={() => setShowLogoutModal(false)}>
+                                Cancel
+                            </button>
+                            <button className="modal-btn modal-btn--confirm" onClick={handleLogout}>
+                                Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
